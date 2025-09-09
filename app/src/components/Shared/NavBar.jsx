@@ -6,6 +6,8 @@ import { User } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import { MenuIcon } from 'lucide-react'
 import { X } from 'lucide-react'
+import { ShoppingCart } from 'lucide-react'
+import { ShoppingBag } from 'lucide-react'
 
 function NavBar() {
     
@@ -39,9 +41,9 @@ function MobileNavBar (){
                         <MenuIcon color='white' />
                     </label>
                   </div>
-                  <div className="drawer-side">
+                  <div className="drawer-side z-100">
                     <label htmlFor="my-drawer-4" aria-label="close sidebar" className="drawer-overlay"></label>
-                    <ul className="menu bg-secondary text-white min-h-full w-80 p-4 gap-4">
+                    <ul className="menu bg-secondary text-black min-h-full w-80 p-4 gap-4">
                       {/* Sidebar content here */}
                         <li>
                             <Link href={'/'} className={` duration-150 transition-all ease-in-out hover:border-accent hover:border-b-2`}>
@@ -58,6 +60,11 @@ function MobileNavBar (){
                                 Admin Dashboard
                             </Link>
                         </li>
+                        <li>
+                            <Link href={'/cart'} className={` duration-150 transition-all ease-in-out ${pathname === '/cart' ? 'border-b-2 border-accent' : "hover:border-accent hover:border-b-2"}`}>
+                                <ShoppingCart /> Cart
+                            </Link>
+                        </li>                        
                         <li className='hover:underline underline-offset-4 decoration-accent'>
                             <div className='flex '>
                                 <User></User>
@@ -83,7 +90,7 @@ function DesktopNavBar() {
             <div className='flex-1'>
                 <h1 className='text-3xl'>Shop<span className='text-accent'>Quick</span></h1>
             </div>
-            <ul className='flex gap-8'>
+            <ul className='flex gap-6'>
                 <li>
                     <Link href={'/'} className={` duration-150 transition-all ease-in-out hover:border-accent hover:border-b-2`}>
                         Home
@@ -94,6 +101,16 @@ function DesktopNavBar() {
                         Shop
                     </Link>
                 </li>
+                <li>
+                    <Link href={'/cart'} className={` duration-150 transition-all ease-in-out ${pathname === '/cart' ? 'border-b-2 border-accent' : "hover:border-accent hover:border-b-2"} flex gap-2`}>
+                        <div className='relative flex justify-center items-center'>
+                            <ShoppingCart />
+                            <span className='absolute bottom-2 left-4 text-accent font-bold pl-2'>3</span>
+                        </div>
+                         Cart
+                        
+                    </Link>
+                </li>      
                 <li>
                     <Link href={'/admin-dashboard'} className='ring rounded-full px-2 py-1 hover:bg-accent hover:text-white transition-all duration-200 ease-in-out'>
                         Admin Dashboard

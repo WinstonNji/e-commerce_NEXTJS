@@ -2,8 +2,7 @@ import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 
-function ProductCard({product}) {
-  console.log(product,'----product from parent')
+function ProductCard({product, singleTrue}) {
 
   function returnStars(rating, id = "rating") {
   const maxStars = 5;
@@ -55,8 +54,9 @@ function ProductCard({product}) {
 
 
   return (
-      <Link className='group ring rounded-2xl overflow-hidden hover:-translate-y-1.5 transition-all duration-300 ease-in-out  shadow-md hover:shadow-xl ' href={`/product/${product.id}`}>
-        <div className='relative  h-70 bg-[#F0F0F2] '>
+    
+    <Link className={`group ring rounded-2xl overflow-hidden hover:-translate-y-1.5 transition-all duration-300 ease-in-out shadow-md hover:shadow-xl ${singleTrue ? 'min-w-sm' : ''}`} href={`/product/${product.id}`}>
+        <div className='relative h-70 bg-[#F0F0F2] '>
           <Image
             src={product.thumbnail}
             fill={true}
