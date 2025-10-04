@@ -1,11 +1,30 @@
-import React from 'react'
+"use client"
+import React, { useState } from 'react'
 import { products } from '../../../../public/product'
 import ProductCard from '@/components/(public)/Shared/ProductCard'
-import Link from 'next/link'
+
 
 function page() {
+
+  const [displayProducts, setDisplayProducts] = useState(products)
+  const [allProducts] = useState(products)
+
+  const handleSearch = (e) => { 
+    const query = e.target.value
+    console.log(query.length)
+    
+    if(query.length > 0){
+      const filterArr = displayProducts.filter((product) => product.title.toLowerCase().includes(query.toLowerCase()))
+
+      setDisplayProducts(filterArr)
+    }else{
+      setDisplayProducts(allProducts)
+    }
+
+  }
+
   return (
-    <div className='py-8 mb-28'>
+    <div className='py-8 mb-28 min-h-screen'>
         <div>
             <div>
                 <p className='font-bold text-4xl text-accent ' >Select Product to Edit</p>
@@ -27,7 +46,7 @@ function page() {
                       <path d="m21 21-4.3-4.3"></path>
                     </g>
                   </svg>
-                  <input type="search" className="  input-lg" placeholder="Search" />
+                  <input type="search" className="  input-lg" placeholder="Search" onChange={handleSearch} />
                 </label>
                 
             </div>
@@ -36,7 +55,7 @@ function page() {
 
         
         <div className='grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4  gap-y-8'>
-            {products.map((product,index) => (
+            {displayProducts.map((product,index) => (
                 <ProductCard key={index} product={product} admin={true}/>
             ))}
         </div>
