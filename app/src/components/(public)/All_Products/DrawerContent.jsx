@@ -1,6 +1,5 @@
 "use client"
 import React from 'react'
-
 import { useState, useEffect } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 
@@ -13,6 +12,7 @@ function DrawerContent({products}) {
     const [max,setMax] = useState(50)
     const [scrollValue,setScrollValue] = useState(max / 2)
 
+    // Initiating brands category and price
     useEffect(() => {
     const uniqueCategories = []
     const uniqueBrands = []
@@ -44,21 +44,21 @@ function DrawerContent({products}) {
     const [selectedCategory, setSelectedCategory] = useState('')
     const [selectedBrands, setSelectedBrands] = useState([])
 
-    useEffect(()=> {
-      setSelectedCategory(searchParams.get("category"))
-      
-      const params = new URLSearchParams(searchParams.toString())
-      const brands = params.getAll("brand")
-      setSelectedBrands(brands)
+    // Manipulating Params
 
-      console.log(selectedBrands)
+
+    useEffect(()=> {
+      // Getting existing Params
+      setSelectedCategory(searchParams.get("category"))
+      const brands = searchParams.getAll("brand")
+      setSelectedBrands(brands)
     }, [searchParams])
 
     const setCategory = (category) => {
         const  params = new URLSearchParams(searchParams.toString())
         const currentParams = params.getAll("category")
 
-        console.log(currentParams)
+        console.log(params, 'currentParams for category')
 
         if(!currentParams.includes(category)){
             params.append("category",category)
@@ -73,6 +73,8 @@ function DrawerContent({products}) {
         
         
     }
+    
+
 
     const clearCategories = () => {
         const params = new URLSearchParams(searchParams.toString())
@@ -206,42 +208,6 @@ function DrawerContent({products}) {
                   type="reset" value="×"/>
                 </form>
                         
-              </div>
-            </div>
-
-            <div className="collapse border text-black">
-              <input type="checkbox" className="peer" />
-              <div className="collapse-title peer-checked:bg-secondary peer-checked:text-white peer-checked:text-shadow-sm ">
-                Size
-              </div>
-              <div className="collapse-content bg-primary text-primary-content peer-checked:bg-secondary peer-checked:text-secondary-content flex justify-between">
-                <label className="flex items-center gap-4">
-                  <input type="checkbox" className="checkbox" /> Small
-                </label>
-                <label className="flex items-center gap-2">
-                  <input type="checkbox" className="checkbox" /> Medium
-                </label>
-                <label className="flex items-center gap-2">
-                  <input type="checkbox" className="checkbox" /> Large
-                </label>
-              </div>
-            </div>
-
-            <div className="collapse border text-black">
-              <input type="checkbox" className="peer" />
-              <div className="collapse-title peer-checked:bg-secondary peer-checked:text-white peer-checked:text-shadow-sm ">
-                Color
-              </div>
-              <div className="collapse-content bg-primary text-primary-content peer-checked:bg-secondary peer-checked:text-secondary-content flex flex-wrap gap-2 justify-between">
-                <label className="flex items-center gap-2">
-                  <input type="checkbox" className="checkbox checkbox-sm" /> Black
-                </label>
-                <label className="flex items-center gap-2">
-                  <input type="checkbox" className="checkbox checkbox-sm" /> White
-                </label>
-                <label className="flex items-center gap-2">
-                  <input type="checkbox" className="checkbox checkbox-sm" /> Red
-                </label>
               </div>
             </div>
 

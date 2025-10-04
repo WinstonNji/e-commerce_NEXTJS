@@ -173,7 +173,7 @@ function CarouselCards({product}) {
                 <div className='flex  justify-between mt-5 gap-4'>
                     <button onClick={handleSave} className='btn flex flex-1 btn-success'>Save</button>
 
-                    <button onClick={handleCancel} className='btn btn-wide flex flex-1 text-white  btn-error'>Cancel</button>
+                    <button onClick={handleCancel} className='btn btn-wide btn-outline flex flex-1 text-error hover:text-white hover:btn-error border-error'>Cancel</button>
 
                     <button onClick={handleCancel} className='btn btn-wide flex flex-1 text-white  btn-error'> <Trash/></button>
                   </div>

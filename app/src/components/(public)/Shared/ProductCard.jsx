@@ -74,7 +74,7 @@ function ProductCard({product, singleTrue = false, admin = false}) {
           <div className= {admin ? "hidden" : "block"} >
             <p className='flex items-center text-xs '>
               <span className='font-light'>
-                {product.rating.toString().slice(0,3)}
+                {product?.rating?.toString()?.slice(0,3)}
               </span>
               {returnStars(product.rating)}
             </p>

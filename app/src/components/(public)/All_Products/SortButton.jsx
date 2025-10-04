@@ -23,7 +23,7 @@ export default function SortSelect() {
     const params = new URLSearchParams(searchParams.toString())
 
     if (value === "all") {
-      params.delete("sort") // don't keep "all" in URL
+      params.delete("sort") 
     } else {
       params.set("sort", value)
     }
