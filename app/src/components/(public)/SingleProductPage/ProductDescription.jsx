@@ -71,10 +71,6 @@ function ProductDescription({product}) {
                             <p>{product.brand}</p>
                         </div>
                         <div className='flex justify-between'>
-                            <p className='font-medium'>Color</p>
-                            <p>{product.color}</p>
-                        </div>
-                        <div className='flex justify-between'>
                             <p className='font-medium'>Category</p>
                             <p>{product.category}</p>
                         </div>

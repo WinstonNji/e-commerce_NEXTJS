@@ -33,6 +33,7 @@ function page() {
               </label>
             </div>
             
+            {/* Filter Drawer */}
             <div className='flex items-center justify-between w-full md:w-fit gap-4 -mt-3'>
                 <div className="drawer w-fit">
                   <input id="my-drawer" type="checkbox" className="drawer-toggle" />
@@ -49,6 +50,7 @@ function page() {
                 </div>
               </div>
 
+              {/* Sort Button */}
               <SortButton />
             </div>
 
