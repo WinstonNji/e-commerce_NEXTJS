@@ -6,6 +6,7 @@ import { Upload } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import { useEffect } from 'react'
 import * as LucideIcons from 'lucide-react'
+import { Trash } from 'lucide-react'
 
 function IconCard({info, isAddIcon}) {
 
@@ -40,6 +41,10 @@ function IconCard({info, isAddIcon}) {
         }
     }
 
+    const handleDelete = () => {
+        // Add delete functionality here
+    }    
+
     const IconComponent = LucideIcons[iconData?.imgSrc]
 
   return (
@@ -72,7 +77,14 @@ function IconCard({info, isAddIcon}) {
         
         
 
-        <input onChange={(e) => setImageUrl(e.target.files[0])} type="file" name="" id="uploadIcon" className='hidden' />
+        <input 
+            onChange={(e) => setImageUrl(e.target.files[0])} 
+            type="file" 
+            name="" 
+            id="uploadIcon" 
+            className='hidden'
+            accept='image/*'
+            />
 
         {isEdit && !imageUrl && 
             <div className='absolute bg-secondary/80 right-0 left-0 top-0 bottom-0 flex items-center justify-center rounded-xl cursor-pointer z-20 hover:bg-accent'>
@@ -95,7 +107,13 @@ function IconCard({info, isAddIcon}) {
             }
 
             {isEdit && 
-                <input type="text" name='text' onChange={(e) => handleChange(e.target.value, e.target.name)} className='flex-1 w-full input text-xs' value={iconData.text} />
+                <input 
+                    type="text" 
+                    name='text' 
+                    onChange={(e) => handleChange(e.target.value, e.target.name)} className='flex-1 w-full input text-xs' 
+                    value={iconData.text}
+                    
+                    />
             }
 
             {isEdit && 
@@ -104,6 +122,7 @@ function IconCard({info, isAddIcon}) {
                     <button onClick={handleCancel} className='text-xs text-white btn bg-error'>cancel</button>
                     <label htmlFor="uploadIcon"  className={`text-xs btn bg-info ${imageUrl ? '' : 'hidden'}`}>
                         Change Icon Image</label>
+                    <button onClick={handleDelete} className='btn   text-white  btn-error'> <Trash/></button>
                 </div>
             }
             

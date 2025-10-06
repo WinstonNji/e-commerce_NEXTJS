@@ -48,7 +48,7 @@ function CategoryCard({info}) {
                             <Upload size={50}  className='text-white group-hover:text-white' />
                         </div>
 
-                        <input type="file" name="" id="imgUpload" />
+                        <input type="file" name="" id="imgUpload" accept='image/*'/>
                     </label>
                     
                 )}
