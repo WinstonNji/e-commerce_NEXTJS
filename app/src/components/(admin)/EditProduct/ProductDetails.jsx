@@ -16,7 +16,7 @@ function ProductDetails({formData, handleInputChange}) {
                   <input 
                     type="number"
                     name="weight"
-                    value={formData.weight}
+                    value={formData?.weight}
                     onChange={handleInputChange}
                     step="0.01"
                     className='input input-bordered'
@@ -30,7 +30,7 @@ function ProductDetails({formData, handleInputChange}) {
                   <input 
                     type="text"
                     name="sku"
-                    value={formData.sku}
+                    value={formData?.sku}
                     onChange={handleInputChange}
                     className='input input-bordered'
                   />
@@ -47,7 +47,7 @@ function ProductDetails({formData, handleInputChange}) {
                     <input 
                       type="number"
                       name="width"
-                      value={formData.width}
+                      value={formData?.width}
                       onChange={handleInputChange}
                       placeholder="Width"
                       step="0.01"
@@ -59,7 +59,7 @@ function ProductDetails({formData, handleInputChange}) {
                     <input 
                       type="number"
                       name="height"
-                      value={formData.height}
+                      value={formData?.height}
                       onChange={handleInputChange}
                       placeholder="Height"
                       step="0.01"
@@ -71,7 +71,7 @@ function ProductDetails({formData, handleInputChange}) {
                     <input 
                       type="number"
                       name="depth"
-                      value={formData.depth}
+                      value={formData?.depth}
                       onChange={handleInputChange}
                       placeholder="Depth"
                       step="0.01"
@@ -88,7 +88,7 @@ function ProductDetails({formData, handleInputChange}) {
                 </label>
                 <textarea 
                   name="warrantyInformation"
-                  value={formData.warrantyInformation}
+                  value={formData?.warrantyInformation}
                   onChange={handleInputChange}
                   className='textarea textarea-bordered'
                 />
@@ -101,7 +101,7 @@ function ProductDetails({formData, handleInputChange}) {
                 </label>
                 <textarea 
                   name="returnPolicy"
-                  value={formData.returnPolicy}
+                  value={formData?.returnPolicy}
                   onChange={handleInputChange}
                   className='textarea textarea-bordered'
                 />

@@ -16,7 +16,6 @@ function Page() {
 
   // Fetching the Category
   const categoriesSet = new Set()
-
   products.forEach((product) => categoriesSet.add(product.category))
 
 

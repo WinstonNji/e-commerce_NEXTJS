@@ -11,7 +11,6 @@ function page() {
 
   const handleSearch = (e) => { 
     const query = e.target.value
-    console.log(query.length)
     
     if(query.length > 0){
       const filterArr = displayProducts.filter((product) => product.title.toLowerCase().includes(query.toLowerCase()))
