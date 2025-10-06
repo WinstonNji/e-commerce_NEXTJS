@@ -42,6 +42,9 @@ function CarouselCards({product}) {
         setIsEdit(false)
     }
 
+    const handleDelete = () => {
+        // Add delete functionality here
+    }
 
     
 
@@ -74,7 +77,7 @@ function CarouselCards({product}) {
                             <Upload/>
                             <p className='font-bold md:hidden lg:block text-center px-4'>Upload Product Image</p>
                             <input type="file"
-                            name="" className='hidden' id="uploadImage" onChange={(e)=> setImage(e.target.files[0])} />
+                            name="" className='hidden' accept='image/*' id="uploadImage" onChange={(e)=> setImage(e.target.files[0])} />
                         </label>
                     )
                 }
@@ -85,7 +88,7 @@ function CarouselCards({product}) {
                     <label htmlFor='uploadImage' className='btn btn-accent text-white mt-2'>
                         Change Image
                     </label>
-                    <input type="file" name="" className='hidden' id="uploadImage" onChange={(e)=> setImage(e.target.files[0])} />
+                    <input type="file" name="" className='hidden' id="uploadImage" accept='image/*' onChange={(e)=> setImage(e.target.files[0])} />
                 </div>
             }
             
@@ -173,9 +176,9 @@ function CarouselCards({product}) {
                 <div className='flex  justify-between mt-5 gap-4'>
                     <button onClick={handleSave} className='btn flex flex-1 btn-success'>Save</button>
 
-                    <button onClick={handleCancel} className='btn btn-wide btn-outline flex flex-1 text-error hover:text-white hover:btn-error border-error'>Cancel</button>
+                    <button onClick={handleCancel} className='btn btn-wide btn-outline flex flex-1 text-black hover:text-white hover:btn-error border'>Cancel</button>
 
-                    <button onClick={handleCancel} className='btn btn-wide flex flex-1 text-white  btn-error'> <Trash/></button>
+                    <button onClick={handleDelete} className='btn btn-wide flex flex-1 text-white  btn-error'> <Trash/></button>
                   </div>
             }
 

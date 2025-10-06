@@ -15,7 +15,7 @@ function CategoryPreviewCard({category}) {
         
         <div className='relative aspect-[4/3] bg-base-200 overflow-hidden'>
             <label htmlFor="imgUpload" className='group'>
-                <div className={`absolute top-0 right-0 left-0 bottom-0 bg-secondary/50 z-10 flex items-center justify-center hover:bg-accent cursor-pointer transition-colors duration-150 ease-in-out `}>
+                <div className={`absolute top-0 right-0 left-0 bottom-0 bg-secondary/50 z-10 flex items-center justify-center cursor-pointer transition-colors duration-150 ease-in-out ${imageUrl ? 'opacity-0 hover:opacity-50' : 'opacity-100'} `}>
                     <Upload size={50}  className='text-white group-hover:text-white' />
                 </div>
 
@@ -23,7 +23,11 @@ function CategoryPreviewCard({category}) {
                     onChange={(e)=>setImageUrl(e.target.files[0])} 
                     type="file" 
                     name="" 
-                    id="imgUpload" />
+                    id="imgUpload" 
+                    className='hidden'
+                    accept='image/*'
+                    />
+                    
             </label>
 
             <Image 
