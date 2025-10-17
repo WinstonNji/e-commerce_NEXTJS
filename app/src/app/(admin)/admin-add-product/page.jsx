@@ -108,7 +108,8 @@ function page() {
         height: originalProductData.height,
         depth: originalProductData.depth,
         warrantyInformation: originalProductData.warrantyInformation,
-        returnPolicy: originalProductData.returnPolicy
+        returnPolicy: originalProductData.returnPolicy,
+        thumnailImg : thumbnailImage
       })
 
     const handleCancel = () => {
@@ -119,11 +120,15 @@ function page() {
         setImages(product.images.map(() => false))
       }
 
-      const handleSubmit = (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault()
+
+        const formInfo = new formData()
+        
+        
         console.log('Form data:', formData)
         // Handle form submission here
-      }
+    }
 
     return (
         <div className='min-h-screen mb-25'>

@@ -31,6 +31,7 @@ const SideDeskTop = () => {
         { path: '/admin-edit-hero-page', icon: Wallpaper, label: 'Hero Image' },
         { path: '/admin-edit-icons', icon: LayoutGrid, label: 'Edit Icons' },
         { path: '/admin-edit-categories', icon: ChartColumnStacked, label: 'Categories' },
+        { path: '/admin-edit-brand', icon: ChartColumnStacked, label: 'Brands' },
     ]
 
     const isActive = (path) => pathname === path
@@ -64,6 +65,7 @@ const SideMobile = () => {
         { path: '/admin-edit-hero-page', icon: Wallpaper, label: 'Hero Image' },
         { path: '/admin-edit-icons', icon: LayoutGrid, label: 'Edit Icons' },
         { path: '/admin-edit-categories', icon: ChartColumnStacked, label: 'Categories' },
+        { path: '/admin-edit-brand', icon: ChartColumnStacked, label: 'Brands' },
         
     ]
 

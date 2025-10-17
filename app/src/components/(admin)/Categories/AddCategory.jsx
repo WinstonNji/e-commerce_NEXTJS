@@ -17,6 +17,11 @@ function AddCategory() {
         
     })
 
+    const handleSubmit = () => {
+        const FormData = new FormData()
+        
+    }
+
     const handleCancel = () => {
         setInfo(defaultInfo)
     }
