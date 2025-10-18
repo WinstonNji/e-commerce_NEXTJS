@@ -1,7 +1,7 @@
-import pool from "../db";
+import pool from "../../db";
 import { v2 as cloudinary } from "cloudinary";
-import { connectCloudinary } from "../cloudinary";
-import { getUrl } from "../utils/getUrl";
+import { connectCloudinary } from "../../cloudinary";
+import { getUrl } from "../../utils/getUrl";
 
 connectCloudinary()
 
@@ -203,10 +203,6 @@ export async function updateProduct(formData,productId) {
             imagesUrl.push(url)
         }
 
-        console.log(imagesUrl, '****updated images url')
-
-        
-
         // Updating product
         const query = `
             UPDATE products 
@@ -228,7 +224,7 @@ export async function updateProduct(formData,productId) {
                 is_featured = $15,
                 display = $16
             WHERE id = $17
-            RETURNING*
+            RETURNING*;
         `
 
         const values = [
@@ -256,7 +252,7 @@ export async function updateProduct(formData,productId) {
             DELETE FROM product_images WHERE product_id = $1
             `, [productId] )
         for (const url of imagesUrl){
-            const updatedImages = await pool.query(`
+            await pool.query(`
                 INSERT INTO product_images(
                     product_id,
                     image
@@ -270,6 +266,7 @@ export async function updateProduct(formData,productId) {
         }
 
         const result = await pool.query(query,values)
+        console.log(result, '---updated product---')
         return result.rows[0]
     } catch (error) {
         console.error(error)
@@ -294,49 +291,4 @@ export async function deleteProduct(productId) {
     
 }
 
-// General
 
-export async function getSingleProduct(productId){
-    try {
-        const result = await pool.query(
-            `
-                SELECT 
-                    p.id,
-                    p.title,
-                    p.price,
-                    p.discount_percentage,
-                    p.description,
-                    p.sku,
-                    p.weight,
-                    p.width,
-                    p.height,
-                    p.depth,
-                    p.warranty_info,
-                    p.return_policy,
-                    p.thumbnail_img,
-                    p.is_deleted,
-                    p.is_featured,
-                    p.display,
-                    ARRAY_AGG(pi.image) AS images,
-                    c.title AS category,
-                    b.brand_name AS brand
-                FROM products p
-                LEFT JOIN product_images pi
-                    ON p.id = pi.product_id
-                JOIN category c
-                    ON p.category = c.id
-                JOIN brand b
-                    ON p.brand = b.id
-                WHERE 
-                    p.id = $1 AND is_deleted = false OR display = true
-                GROUP BY p.id, c.title, b.brand_name;
-            `, 
-        [productId])
-
-        return result.rows[0]
-        
-    } catch (error) {
-        console.log(error)
-        throw error
-    }
-}

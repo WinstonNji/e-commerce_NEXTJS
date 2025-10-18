@@ -1,50 +1,34 @@
-import pool from "../db";
+import pool from "@/lib/db";
 import { v2 as cloudinary } from "cloudinary";
-import { connectCloudinary } from "../cloudinary";
+import { getUrl } from "@/lib/utils/getUrl";
 
-connectCloudinary()
 
 export const createCategory = async (formData) => {
-
-    const categoryName = formData.get('categoryName')
-    const caption = formData.get('caption')
-    const categoryImg = formData.get('categoryImg')
-
     try {
-        const buffer = Buffer.from(await categoryImg.arrayBuffer())
-
-        const upload = await new Promise((resolve,reject) => {
-            const stream = cloudinary.uploader.upload_stream(
-                {   
-                    folder : 'e-commerce/category',
-                    resource_type : "image"
-                },
-                (error,result) => {
-                    if(error) reject(error)
-                    else resolve(result)
-                }
-            );
-            stream.end(buffer)
-        })
-
-        const categoryUrl = upload.secure_url
-
+        const categoryName = formData.get('categoryName')
+        const caption = formData.get('caption')
+        const categoryImg = formData.get('categoryImg')
+        const display = formData.get('display')
+        // Upload image to cloudinary and get the url
+        const categoryUrl = await getUrl(categoryImg, 'e-commerce/category')
 
         const query = `
             INSERT into category(
                 title,
                 caption,
-                image
+                image,
+                display
             )
             VALUES(
-                $1, $2, $3
+                $1, $2, $3, $4
             ) RETURNING *;
         `;
 
         const values = [
             categoryName,
             caption,
-            categoryUrl
+            categoryUrl,
+            display || true
         ]
 
         console.log(values, '----VALUES')
@@ -97,6 +81,7 @@ export const updateCategory = async (id, formData) => {
         const categoryName = formData.get('categoryName')
         const caption = formData.get('caption')
         const categoryImg = formData.get('categoryImg')
+        const display = formData.get('display')
 
         const buffer = Buffer.from(await categoryImg.arrayBuffer())
 
@@ -121,8 +106,9 @@ export const updateCategory = async (id, formData) => {
             SET 
                 title = $1,
                 caption = $2,
-                image = $3
-            WHERE id = $4
+                image = $3,
+                display = $4    
+            WHERE id = $5
             RETURNING *;
         `
 
@@ -130,6 +116,7 @@ export const updateCategory = async (id, formData) => {
             categoryName,
             caption,
             categoryUrl,
+            display,
             id
         ]
 
