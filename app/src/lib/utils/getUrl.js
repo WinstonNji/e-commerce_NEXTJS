@@ -3,7 +3,7 @@ import { connectCloudinary } from "../cloudinary";
 
 export async function getUrl(file, filePath = 'e-commerce/'){ 
     try {
-         console.log(file, "***********file received")
+        console.log(file, "***********file received")
         connectCloudinary()
 
         const buffer = Buffer.from(await file.arrayBuffer())

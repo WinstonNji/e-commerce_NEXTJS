@@ -100,6 +100,7 @@ function Newicon() {
             <div className='flex items-center justify-center sticky top-0 backdrop-blur'>
                 <div className='w-full lg:w-1/2 '>
                     <p className='font-bold mb-4 text-accent'>Preview</p>
+                    {/* Previewing Icon */}
                     <IconPreviewCard info={info} />
                 </div>
             </div>
@@ -108,6 +109,7 @@ function Newicon() {
             <p className='mt-4 font-bold text-xl text-accent'>Select From Available Icons</p>
 
             <div className='w-full flex flex-wrap gap-4 justify-center mt-6'>
+                {/* Showing all available Icons to choose from */}
                 {availableIcons.map((Icon, idx) => {
                     const iconName = Icon.render.displayName
                     return (
