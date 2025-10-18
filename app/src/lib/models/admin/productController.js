@@ -25,6 +25,7 @@ export async function createProduct(formData) {
         const thumbnailImg = formData.get('thumbnailImg')
         const display = formData.get('display')
         const is_featured = formData.get('is_featured')
+        const inventory = formData.get('inventory')
 
         const images = Array.from(formData.getAll('image'))
 
@@ -57,7 +58,8 @@ export async function createProduct(formData) {
                     return_policy,
                     thumbnail_Img,
                     is_featured,
-                    display
+                    display,
+                    inventory
                 ) 
                 VALUES (
                     $1,
@@ -75,7 +77,8 @@ export async function createProduct(formData) {
                     COALESCE($13,'No return'),
                     $14,
                     $15,
-                    $16
+                    $16,
+                    $17
                 ) 
                 RETURNING*;`;
     
@@ -95,7 +98,8 @@ export async function createProduct(formData) {
             returnPolicy || null,
             thumbnailUrl,
             is_featured,
-            display
+            display,
+            inventory
         ];
 
         const result = await pool.query(query,values)
@@ -147,6 +151,7 @@ export async function getAllProducts() {
                 p.is_deleted,
                 p.is_featured,
                 p.display,
+                p.inventory,
                 ARRAY_AGG(pi.image) AS images,
                 c.title AS category,
                 b.brand_name AS brand
@@ -190,6 +195,7 @@ export async function updateProduct(formData,productId) {
         const thumbnailImg = formData.get('thumbnailImg')
         const is_featured = formData.get('is_featured')
         const display = formData.get('display')
+        const inventory =  formData.get('inventory')
         // Get all other images for product
         const images = Array.from(formData.getAll('image'));
 
@@ -222,8 +228,9 @@ export async function updateProduct(formData,productId) {
                 return_policy=COALESCE($13,'No return'),
                 thumbnail_Img=$14,
                 is_featured = $15,
-                display = $16
-            WHERE id = $17
+                display = $16,
+                inventory = $17
+            WHERE id = $18
             RETURNING*;
         `
 
@@ -244,6 +251,7 @@ export async function updateProduct(formData,productId) {
             thumbnailUrl,
             is_featured,
             display,
+            inventory,
             productId
         ]
 

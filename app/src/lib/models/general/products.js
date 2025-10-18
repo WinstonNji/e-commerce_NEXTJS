@@ -20,6 +20,7 @@ export async function getAllProducts_general() {
                 p.is_deleted,
                 p.is_featured,
                 p.display,
+                p.inventory,
                 ARRAY_AGG(pi.image) AS images,
                 c.title AS category,
                 b.brand_name AS brand
@@ -65,6 +66,7 @@ export async function getSingleProduct(productId){
                     p.is_deleted,
                     p.is_featured,
                     p.display,
+                    p.inventory,
                     ARRAY_AGG(pi.image) AS images,
                     c.title AS category,
                     b.brand_name AS brand
