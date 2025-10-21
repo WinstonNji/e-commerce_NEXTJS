@@ -13,6 +13,12 @@ const nextConfig = {
                 hostname : 'www.aputf.org',
                 port : '',
                 pathname: '/**'
+            },
+            {
+                protocol: 'https',
+                hostname : 'res.cloudinary.com',
+                port : '',
+                pathname: '/**'
             }
 
         ]
