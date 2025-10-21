@@ -11,7 +11,7 @@ function ProductImages({thumbnailImage, handleThumbnailImg, images, uploadImg, h
 
   return (
     <div>
-        <div className='pt-4'>
+        <div className='md:pt-5'>
             <p className='mb-5 text-xl font-semibold text-accent'>Product Images</p>
             {/* Container */}
             

@@ -1,6 +1,6 @@
 "use client"
 import React, { useState } from 'react'
-import { ChartColumnStacked, LayoutGrid, Pencil, Search } from 'lucide-react'
+import { ChartColumnStacked, LayoutGrid, Pencil, Search, Tag } from 'lucide-react'
 import { Home } from 'lucide-react'
 import { Plus } from 'lucide-react'
 import { Wallpaper } from 'lucide-react'
@@ -31,7 +31,7 @@ const SideDeskTop = () => {
         { path: '/admin-edit-hero-page', icon: Wallpaper, label: 'Hero Image' },
         { path: '/admin-edit-icons', icon: LayoutGrid, label: 'Edit Icons' },
         { path: '/admin-edit-categories', icon: ChartColumnStacked, label: 'Categories' },
-        { path: '/admin-edit-brand', icon: ChartColumnStacked, label: 'Brands' },
+        { path: '/admin-edit-brand', icon: Tag, label: 'Brands' },
     ]
 
     const isActive = (path) => pathname === path
@@ -65,7 +65,7 @@ const SideMobile = () => {
         { path: '/admin-edit-hero-page', icon: Wallpaper, label: 'Hero Image' },
         { path: '/admin-edit-icons', icon: LayoutGrid, label: 'Edit Icons' },
         { path: '/admin-edit-categories', icon: ChartColumnStacked, label: 'Categories' },
-        { path: '/admin-edit-brand', icon: ChartColumnStacked, label: 'Brands' },
+        { path: '/admin-edit-brand', icon: Tag, label: 'Brands' },
         
     ]
 

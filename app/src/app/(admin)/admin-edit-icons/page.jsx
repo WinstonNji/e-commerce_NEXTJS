@@ -1,29 +1,11 @@
 import React from 'react'
 import IconCard from '@/components/Shared/Icons/IconCard'
 import { assets } from '../../../../public/assets'
-import Newicon from '@/components/(admin)/Icons/newicon'
-
+import Newicon from '@/components/(admin)/TrustSignals/newicon'
+import TrustSignalList from '@/components/(admin)/TrustSignals/TrustSignalList'
+import { Suspense } from 'react'
 
 function page() {
-
-const trustSignals = [
-    {
-        imgSrc : assets.freeShippingIcon,
-        text: 'Free shipping on items over $50'
-    },
-    {
-        imgSrc : assets.thirtyDayReturnIcon,
-        text : '30-Day Returns - Hassle-free exchanges'
-    },
-    {
-        imgSrc: assets.customerServiceIcon,
-        text: "24/7 Customer Support - We're here to help"
-    },
-    {
-        imgSrc: assets.creditCardSecureIcon,
-        text: "Secure Payments - Your data is protected"
-    }
-]
 
   return (
     <div className='h-screen'>
@@ -49,11 +31,16 @@ const trustSignals = [
               defaultChecked 
             />
             <div className="tab-content bg-white border border-base-300 p-6 px-8 md:px-16 transition-all duration-300 h-full overflow-y-auto">
-              <div className='relative flex flex-col gap-4'>
-                {trustSignals.map((signal,idx) => (
-                    <IconCard key={idx} info={(signal)} />
-                ))}
-              </div>
+              <Suspense fallback={
+                <div className='relative flex flex-col gap-4'>
+                  {[...Array(5)].map((_,idx) => (
+                    <div key={idx} className="skeleton h-20 w-w-full"></div>
+                  ))}
+                  
+                </div>
+              }>
+                <TrustSignalList />
+              </Suspense>
             </div>
           </div>
         </div>

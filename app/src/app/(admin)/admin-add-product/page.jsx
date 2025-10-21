@@ -1,11 +1,10 @@
 "use client"
 import ProductImages from '@/components/(admin)/AddProduct/ProductImages'
 import ProductDetails from '@/components/(admin)/EditProduct/ProductDetails'
-import Image from 'next/image'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useState } from 'react'
 import BasicInformation from '@/components/(admin)/EditProduct/BasicInformation'
-import { products } from '../../../../public/product'
+import { toast } from 'react-toastify'
 
 
 function page() {
@@ -14,16 +13,62 @@ function page() {
     // Initialising Images
 
     const [thumbnailImage,setThumbnailImg] = useState(false)
-    const [images, setImages] = useState([Array.from(1)].map(()=> false))
+    const [images, setImages] = useState([false])
+    const [categories, setCategories] = useState([])
+    const [allBrands, setAllBrands] = useState([])
+    const [showDialog, setShowDialog] = useState(false)
 
 
+    useEffect(() => {
+        const fetchCategory = async () => {
+            try {
+                const res = await fetch('/api/v1/admin/category')
+                if(!res.ok){
+                    throw new Error('Failed to create new product')
+                }
+                const result = await res.json()
+                let categories = result.data
+                setCategories(categories)
+            } catch (error) {
+                console.error(error)
+            }
+        }
+
+        const fetchBrands = async () => {
+            try {
+                const res = await fetch('/api/v1/general/brand')
+                if(!res.ok){
+                    throw new Error("An error occured, couldn't fetch brands")
+                }
+                const result = await res.json()
+                if(!result){
+                    throw new Error("Couldn't get brands")
+                }
+
+                console.log(result.data, '***brands fetched')
+
+                setAllBrands(result.data)
+
+            } catch (error) {
+                console.error(error)
+            }
+        }
+        
+        fetchCategory()
+        fetchBrands()
+    }, [])
 
     const handleThumbnailImg = (e) => {
         const file = e.target.files[0] 
         if(!file){
             return
         }
+        console.log(file, '******file')
         setThumbnailImg(file)
+        setProductInfo(prev => ({
+            ...prev,
+            thumbnailImg : file
+        }))
     }
 
     const uploadImg = (e,index) => {
@@ -67,16 +112,22 @@ function page() {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target
-        setFormData(prev => ({
+        setProductInfo(prev => ({
           ...prev,
           [name]: value
         }))
       }
 
-    // Fetching the Category
-      const categoriesSet = new Set()
-      products.forEach((product) => categoriesSet.add(product.category))
+    const handleToggle = (e) => {
+        const {name,checked} = e.target
+        alert(checked)
 
+        setProductInfo(prev => ({
+            ...prev,
+            [name] : checked
+        }))
+
+    }
 
     const [originalProductData] = useState({
         title: "",
@@ -91,11 +142,14 @@ function page() {
         height: "",
         depth: "",
         warrantyInformation: "",
-        returnPolicy: ""
-      })
+        returnPolicy: "",
+        display: true,
+        is_featured : false,
+        inventory : 50
+    })
 
       // Form state
-      const [formData, setFormData] = useState({
+    const [productInfo, setProductInfo] = useState({
         title: originalProductData.title,
         description: originalProductData.description,
         price: originalProductData.price,
@@ -109,31 +163,101 @@ function page() {
         depth: originalProductData.depth,
         warrantyInformation: originalProductData.warrantyInformation,
         returnPolicy: originalProductData.returnPolicy,
-        thumnailImg : thumbnailImage
-      })
+        thumbnailImg : thumbnailImage,
+        display : originalProductData.display,
+        is_featured : originalProductData.is_featured,
+        inventory : originalProductData.inventory
+    })
 
     const handleCancel = () => {
-        console.log(originalProductData, '---original')
-        console.log(formData, '---edited productData')
-        setFormData(originalProductData)
+        setProductInfo(originalProductData)
         setThumbnailImg(false)
-        setImages(product.images.map(() => false))
-      }
+        setImages([false])
+    }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
 
-        const formInfo = new formData()
+        if(!thumbnailImage){
+            setShowDialog(true)
+            return
+        }
+
+        if(images.length === 0 || images[0] === false){
+            setShowDialog(true)
+            return
+        }
         
-        
-        console.log('Form data:', formData)
-        // Handle form submission here
+        const formData = new FormData()
+
+        // Appending  Product Values
+        for(const [key,value] of Object.entries(productInfo)){
+            formData.append(key,value) 
+        }
+
+        // Appending Product Images
+        for(const image of images){
+            formData.append('image', image)
+        }     
+
+        const loading = toast.loading('Creating Product...', {autoClose:false})
+        try {
+            const response = await fetch('api/v1/admin/products', {
+                method : 'POST',
+                body : formData
+            })
+            
+            if(!response.ok) throw new Error('Failed to create product')
+            
+            const result = await response.json()
+
+            if(!result){
+                toast.update(loading, {
+                    render : result.message,
+                    type : "error",
+                    isLoading : false
+                })
+            }
+
+            toast.update(loading, {
+                render: result.message,
+                type: 'success',
+                autoClose : 4000,
+                isLoading : false
+            })
+            
+        } catch (error) {
+            toast.update(loading, {
+                render : error,
+                type : "error",
+                isLoading : false
+            })
+        }finally{
+            setProductInfo(originalProductData)
+            setThumbnailImg(false)
+            setImages([false])
+        }
     }
 
     return (
         <div className='min-h-screen mb-25'>
-            {/* Image Section */}
-            <form action="" className='flex flex-col gap-8'>
+
+            {showDialog && (
+              <dialog open className="modal">
+                <div className="modal-box">
+                  <h3 className="font-bold text-lg">Missing Thumbnail or Product Image</h3>
+                  <p className="py-4">Please upload a thumbnail image and atleast one product image before creating product.</p>
+                  <div className="modal-action">
+                    <button className="btn btn-outline hover:btn-error" onClick={() => setShowDialog(false)}>
+                      Close
+                    </button>
+                  </div>
+                </div>
+              </dialog>
+            )}
+
+            <form onSubmit={handleSubmit} className='flex flex-col gap-8'>
+                {/* Image Section */}
                 <ProductImages
                     thumbnailImage = {thumbnailImage}
                     handleThumbnailImg = {handleThumbnailImg}
@@ -142,26 +266,59 @@ function page() {
                     handleAddNewImage = {handleAddNewImage}
                     handleRemoveImage = {handleRemoveImage}
                 />
+
+                {/* Toggles */}
+                <div className='md:w-2/3 lg:w-2/3 '>
+                    <div className='flex justify-between flex-col md:flex-row gap-4 '>
+                        <div className='flex flex-col'>
+                            <div className='flex gap-2 items-center'>
+                                <h1 className=' font-semibold'>Display Product</h1>
+                                <input
+                                    type="checkbox"
+                                    name='display'
+                                    checked ={productInfo.display}
+                                    className="toggle border-red-600 bg-red-500 checked:border-green-500 checked:bg-green-400 checked:text-white"
+                                    onChange={handleToggle}
+                                />
+                            </div>
+                            <p className='text-gray-500 text-sm'>Toggle to choose if product should be displayed</p>
+                        
+                        </div>
+                            <div>
+                                <div className='flex gap-2 items-center'>
+                                    <h1 className='font-semibold'>Feature product on front page</h1>
+                                    <input
+                                        type="checkbox"
+                                        name='is_featured'
+                                        className="toggle border-red-600 bg-red-500 checked:border-green-500 checked:bg-green-400 checked:text-white"
+                                        onChange={handleToggle}
+                                    />
+                                </div>
+                                <p className='text-gray-500 text-sm'>Toggle to choose if product should be displayed on front-page under Popular Products</p>
+                            </div>
+                        
+                    </div>
+                </div> 
             
                 <BasicInformation 
-                    formData = {formData}
+                    formData = {productInfo}
                     handleInputChange = {handleInputChange}
-                    categoriesSet = {categoriesSet}
+                    categories = {categories}
+                    allBrands = {allBrands}
                 />
 
                   {/* Product Details Section */}
                 <ProductDetails 
-                    formData = {formData}
+                    formData = {productInfo}
                     handleInputChange = {handleInputChange}
                 />
 
                   {/* Action Buttons */}
                 <div className='flex justify-end gap-4'>
-                    <button type="button" className='btn btn-outline hover:btn-error' onClick={handleCancel} >Cancel</button>
-                    <button type="submit" className='btn text-white btn-success' onClick={handleSubmit} >Create Product</button>
+                    <button type='reset' className='btn btn-outline hover:btn-error' onClick={handleCancel} >Cancel</button>
+                    <button type="submit" className='btn text-white btn-success'>Create Product</button>
                 </div>
             </form>
-            
         </div>
     )
 }

@@ -1,5 +1,6 @@
 import "./globals.css"
 import SideBar from "@/components/(admin)/Shared/SideBar"
+import { ToastContainer } from "react-toastify"
 
 export const metadata = {
   title: 'Next.js',
@@ -19,6 +20,7 @@ export default function RootLayout({ children }) {
         <main className="flex-1 min-w-0 mx-4 ">
           {children}
         </main>
+        <ToastContainer autoClose={3000} />
       </body>
     </html>
   )

@@ -1,18 +1,96 @@
 "use client"
 import React, { useState, useEffect, useRef } from 'react'
 import { Pencil, Trash2, Plus, Check, X } from 'lucide-react'
+import { toast } from 'react-toastify'
+import { generateToast } from '@/lib/utils/toastGenerator'
 
 function page() {
+	
 	// Local state to manage list and inline edit/add
-	const [brands, setBrands] = useState([
-		{ name: "Acme" },
-		{ name: "Globex" },
-		{ name: "Initech" },
-		{ name: "Umbrella" },
-	])
+	const [brands, setBrands] = useState([])
 	const [nameInput, setNameInput] = useState("")
 	const [editingIndex, setEditingIndex] = useState(null)
 	const inputRef = useRef(null)
+	const [isLoading,setIsLoading] = useState(false)
+
+	useEffect(() => {
+		fetchAllBrands()
+	}, [])
+
+	const fetchAllBrands = async () => {
+		try {
+			setIsLoading(true)
+			const res = await fetch('/api/v1/general/brand')
+			if(!res.ok){
+				throw new Error("Couldn't fetch product")
+			}
+			const result = await res.json()
+			console.log(result)
+			if(!result){
+				toast.error("Couldn't fetch all brands")
+			}
+			setBrands(result.data)
+		} catch (error) {
+			toast.error("An error occured")
+		}finally{
+			setIsLoading(false)
+		}
+	}
+
+	const addBrand = async (brandName) => {
+		const loadingToastId = toast.loading('Adding Brand...', {autoClose: false})
+		try {
+			const res = await fetch('/api/v1/admin/brand', {
+				method : 'POST',
+				headers : {
+					'Content-Type' : 'application/json'
+				},
+				body : JSON.stringify({
+					brandName: brandName
+				})
+			})
+			if(!res.ok){
+				throw new Error('An error occured') 
+			}
+			const result = await res.json()
+			console.log(result, '***result frontend')
+			if(!result.success){
+				generateToast(loadingToastId, result.message, 'error')
+				return
+			}
+			generateToast(loadingToastId, result.message, 'success')
+			fetchAllBrands()
+		} catch (error) {
+			generateToast(loadingToastId, error, 'error')
+		}
+	}
+
+	const editBrand = async (updatedBrandName, brandId) => {
+		const loadingToastId = toast.loading('Updating Brand...', {autoClose: false})
+		try {
+			const res = await fetch(`/api/v1/admin/brand/${brandId}`, {
+				method: 'PATCH',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					brandName: updatedBrandName
+				})
+			})
+			if (!res.ok) {
+				throw new Error('An error occurred')
+			}
+			const result = await res.json()
+			if (!result.success) {
+				generateToast(loadingToastId, result.message, 'error')
+				return
+			}
+			generateToast(loadingToastId, result.message, 'success')
+			fetchAllBrands()
+		} catch (error) {
+			generateToast(loadingToastId, error.message, 'error')
+		}
+	}
 
 	useEffect(() => {
 		if (editingIndex !== null && inputRef.current) {
@@ -25,27 +103,58 @@ function page() {
 		setEditingIndex(null)
 	}
 
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault()
 		if (!nameInput.trim()) return
 		if (editingIndex === null) {
-			setBrands(prev => [...prev, { name: nameInput.trim() }])
+			addBrand(nameInput.trim())
 		} else {
-			setBrands(prev => prev.map((b, i) => (i === editingIndex ? { name: nameInput.trim() } : b)))
+			editBrand(nameInput.trim(), brands[editingIndex].id)
 		}
 		handleCancel()
 	}
 
 	const handleEdit = (index) => {
 		setEditingIndex(index)
-		setNameInput(brands[index].name)
+		setNameInput(brands[index].brand_name)
 	}
 
-	const handleDelete = (index) => {
-		setBrands(prev => prev.filter((_, i) => i !== index))
-		if (editingIndex === index) {
-			handleCancel()
+	const handleDelete = async (brandId) => {
+		const loading = toast.loading('Deleting Brand...', {autoClose: false})
+		try {
+			const res = await fetch(`/api/v1/admin/brand/${brandId}`, {
+				method : 'DELETE'
+			})
+			if(!res.ok){
+				throw new Error('An error occured')
+			}
+			const result = await res.json()
+			if(!result.success){
+				toast.update(loading, {
+					render: result.message,
+					type : 'error',
+					isLoading : false,
+					autoClose:5000
+				})
+				return
+			}
+
+			toast.update(loading, {
+				render : result.message,
+				type : 'success',
+				isLoading : false,
+				autoClose:3000
+			})
+			fetchAllBrands()
+		} catch (error) {
+			toast.update(loading, {
+				render : error,
+				type : 'error',
+				isLoading : false,
+				autoClose:3000
+			})
 		}
+		
 	}
 
 	const handleInlineEdit = (index, value) => {
@@ -100,13 +209,23 @@ function page() {
 					</div>
 
 					<div className='p-6 md:p-8'>
-						{brands.length === 0 ? (
+						{brands?.length === 0 ? (
 							<div className='text-center py-12 text-base-content/60'>
-								<p className='text-lg'>No brands yet. Add your first brand above!</p>
+								<p className='text-lg'>
+									{brands?.length === 0 && !isLoading ? (
+										<p>No brands yet. Add your first brand above!</p>
+									) : isLoading ? (
+										<div className="w-full text-center flex items-center gap-2">
+											<span>Fetching All Brands...</span>
+											<span className="loading loading-bars loading-xl"></span>
+										</div>
+									) : null}
+
+								</p>
 							</div>
 						) : (
 							<div className='space-y-2'>
-								{brands.map((brand, idx) => (
+								{brands?.map((brand, idx) => (
 									<div
 										key={idx}
 										className={`flex items-center justify-between p-4 rounded-lg border transition-all group ${
@@ -116,10 +235,10 @@ function page() {
 										}`}
 									>
 										<div
-											className='flex-1 font-medium  cursor-pointer group-hover:text-white'
-											onClick={() => handleInlineEdit(idx, brand.name)}
+											className={`flex-1 font-medium  cursor-pointer group-hover:text-white ${editingIndex? 'group-hover:text-black' : 'text-black'}`}
+											onClick={() => handleInlineEdit(idx, brand?.brand_name)}
 										>
-											{brand.name}
+											{brand?.brand_name}
 										</div>
 										<div className='flex gap-2'>
 											<button
@@ -133,7 +252,7 @@ function page() {
 											<button
 												type='button'
 												className='btn btn-ghost btn-sm text-base-content hover:text-white btn-error'
-												onClick={() => handleDelete(idx)}
+												onClick={() => handleDelete(brand.id)}
 												title="Delete brand"
 											>
 												<Trash2 size={18} />
@@ -147,7 +266,7 @@ function page() {
 				</div>
 
 				<div className='mt-6 text-center text-sm text-base-content/70'>
-					{brands.length} {brands.length === 1 ? 'brand' : 'brands'} in total
+					{brands?.length} {brands?.length === 1 ? 'brand' : 'brands'} in total
 				</div>
 			</div>
 		</div>
