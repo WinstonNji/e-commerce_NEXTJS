@@ -3,9 +3,9 @@ import { getUrl } from "@/lib/utils/getUrl";
 
 export async function createTrustSignal(formData) {
     try {
-        const text = formData.get('trustSignalText');
-        const icon = formData.get('trustSignalIcon');
-        const display = formData.get('display');
+        const trustSignalText = formData.text;
+        const trustSignalIcon = formData.imgSrc;
+        const display = formData.display;
 
         const query = `
             INSERT INTO trust_signal (
@@ -18,8 +18,8 @@ export async function createTrustSignal(formData) {
         `;
 
         const values = [
-            text,
-            icon,
+            trustSignalText,
+            trustSignalIcon,
             display || true
         ]
 
@@ -46,8 +46,9 @@ export async function getAllTrustSignals() {
 
 export async function editTrustSignal(formData, trustSignalId) {
     try {
-        const text = formData.get('trustSignalText');
-        const iconImg = formData.get('trustSignalIcon');
+        console.log(formData, '***editTrustSignal model')
+        const text = formData.get('trust_signal_text');
+        const iconImg = formData.get('trust_signal_icon');
         const display = formData.get('display');
 
         // Creating icon url

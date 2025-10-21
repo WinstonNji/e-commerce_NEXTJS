@@ -1,17 +1,35 @@
 import {NextResponse} from "next/server";
 import { deleteCategory, updateCategory } from "@/lib/models/admin/categories";
+import pool from "@/lib/db";
 
 
 export async function DELETE(req, {params}){
     try {
         const {id} = await params;
 
+        // Checking if a product already uses this category
+        const categoryExists = await pool.query(`
+            SELECT p.title FROM products p
+            WHERE p.category = $1
+        `, [id])
+
+        console.log(categoryExists.rows, '---category exists check')
+
+        if(categoryExists.rowCount !== 0){
+            const product = categoryExists.rows[0].title
+            return NextResponse.json({
+                success: false,
+                message: `Couldn't update category. "${product}" is already using this category. Update this product's category first.`
+            })
+        }
+
+        // If product doesn't use category, then we can delete
         const result = await deleteCategory(id)
 
         if(result.rowCount === 0){
             return NextResponse.json({
                 success: false,
-                message: `Product not found`
+                message: `Category not found`
             })
         }
 
@@ -31,7 +49,6 @@ export async function DELETE(req, {params}){
 
 export async function PATCH(req, {params}){
     try {
-        console.log(params, '--params--')
         const {id} = await params
         const formData = await req.formData()
         const result = await updateCategory(id, formData )
@@ -39,13 +56,13 @@ export async function PATCH(req, {params}){
         if(result.rowCount == 0){
             return NextResponse.json({
                 success: false,
-                message: "Couldn't update product"
+                message: "Couldn't update category"
             })
         }
 
         return NextResponse.json({
             success: true,
-            message: "Product sucessfully updated"
+            message: "Category sucessfully updated"
         })
     } catch (error) {
         return NextResponse.json({

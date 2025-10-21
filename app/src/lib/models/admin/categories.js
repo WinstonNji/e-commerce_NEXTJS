@@ -1,5 +1,4 @@
 import pool from "@/lib/db";
-import { v2 as cloudinary } from "cloudinary";
 import { getUrl } from "@/lib/utils/getUrl";
 
 
@@ -9,6 +8,21 @@ export const createCategory = async (formData) => {
         const caption = formData.get('caption')
         const categoryImg = formData.get('categoryImg')
         const display = formData.get('display')
+
+
+        const categories = await pool.query(`
+                SELECT 
+                    id, 
+                    title 
+                from category
+                WHERE title = $1
+            `, [categoryName])
+
+        if(categories.rowCount !== 0){
+            return false
+        }
+        
+
         // Upload image to cloudinary and get the url
         const categoryUrl = await getUrl(categoryImg, 'e-commerce/category')
 
@@ -60,6 +74,7 @@ export const getAllCategories = async () => {
 
 export const deleteCategory = async (id) => {
     try {
+
         const query = `
             DELETE FROM category
             WHERE id = $1 
@@ -67,7 +82,6 @@ export const deleteCategory = async (id) => {
         `
 
         const result = await pool.query(query, [id])
-        console.log(result)
         return result
     } catch (error) {
         console.log(error)
@@ -83,23 +97,7 @@ export const updateCategory = async (id, formData) => {
         const categoryImg = formData.get('categoryImg')
         const display = formData.get('display')
 
-        const buffer = Buffer.from(await categoryImg.arrayBuffer())
-
-        const upload = await new Promise((resolve,reject) => {
-            const stream = cloudinary.uploader.upload_stream(
-                {
-                    resource_type: "image",
-                    folder : 'e-commerce/category'
-                },
-                (error,result) => {
-                    if(error) reject(error)
-                    else resolve(result)
-                }
-            );
-            stream.end(buffer)
-        });
-
-        const categoryUrl = upload.secure_url
+        const categoryUrl = await getUrl(categoryImg, 'e-commerce/category')
 
         const query = `
             UPDATE category

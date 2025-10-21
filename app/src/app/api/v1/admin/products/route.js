@@ -15,10 +15,10 @@ export async function POST(req){
             })
         }
         
+        
         return NextResponse.json({
             success: true,
-            message: 'Success',
-            data: result
+            message: 'Product Created Successfully',
         })
     } catch (error) {
         return NextResponse.json({

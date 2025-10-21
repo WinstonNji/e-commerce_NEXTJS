@@ -35,8 +35,26 @@ import { NextResponse } from "next/server";
 
 export async function POST(req) {
     const data = await req.json()
-    console.log(req.json, data, '-----body')
+
+    console.log(data, '-----body')
+
     try {
+        // Fetch all brands
+        const brands = await pool.query(`
+            Select * from brand
+            WHERE brand_name = $1
+        `, [data.brandName])
+
+        if(brands.length !== 0){
+            return NextResponse.json({
+                success: false,
+                message: "This brand is already registered. Create a new brand",
+            })
+        }
+
+        console.log(brands.rows, '****brands')
+
+        // 
         const brandName = data.brandName
         const query = `
             INSERT INTO brand (
@@ -50,8 +68,6 @@ export async function POST(req) {
         let result = await pool.query(query,values)
         result.rows[0]
 
-        console.log(result)
-
         if(!result){
             return NextResponse.json({
                 success: false,
@@ -62,11 +78,12 @@ export async function POST(req) {
         return NextResponse.json({
             success: true,
             message: "Brands sucessfully created",
-        })
+        }, {status: 200})
     } catch (error) {
+        console.log(error)
         return NextResponse.json({
             success: false,
-            error: error.message 
-        })
+            message: 'An error occured'  
+        }, {status: 500})
     }
 }

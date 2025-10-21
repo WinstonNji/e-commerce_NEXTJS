@@ -1,22 +1,31 @@
 import { NextResponse } from "next/server";
 import { createCategory,getAllCategories } from "@/lib/models/admin/categories";
+
 export async function POST(req) {
     try {
         const formData = await req.formData();
+
+        console.log(formData, '**formData from frontend')
         const result = await createCategory(formData)
 
         if(!result){
-            throw error
+            return NextResponse.json({
+                success: false, 
+                message: "Couldn't create category"
+            })
         }
 
         return NextResponse.json({
-            success: true, data: result
-        })
+            success: true, 
+            message : "Category successfully created",
+            data: result
+        }, {status: 200})
     } catch (error) {
+        console.error(error)
         NextResponse.json({
             success: false, 
             message:'An error occured',
-            data: error
+            error: error
         })
     }
 }

@@ -32,6 +32,7 @@ export async function createProduct(formData) {
         // Handle thumbnail Image
         const thumbnailUrl = await getUrl(thumbnailImg, `e-commerce/products/${category}`)
 
+        console.log(thumbnailUrl, '****thumbnail url')
         // handle other product images
         const imagesUrl = []
         for(const img of images){
@@ -167,6 +168,7 @@ export async function getAllProducts() {
         `
 
         const result = await pool.query(query)
+        console.log(result, '***result')
         return result.rows
     } catch (error) {
         console.error(error)
@@ -200,14 +202,16 @@ export async function updateProduct(formData,productId) {
         const images = Array.from(formData.getAll('image'));
 
         // Thumbnail Upload
+        console.log(thumbnailImg, '***thumbnail image to be updated backend')
         const thumbnailUrl = await getUrl(thumbnailImg, `e-commerce/products/${title}`)
-        
+        console.log(thumbnailUrl, '***thumbnail url updated bckend')
         // Generate URL for Other Product Images
         const imagesUrl = [];
         for(const img of images){
             const url = await getUrl(img, `e-commerce/products/${title}`)
             imagesUrl.push(url)
         }
+        console.log(imagesUrl, '***all images url updated bcknd')
 
         // Updating product
         const query = `

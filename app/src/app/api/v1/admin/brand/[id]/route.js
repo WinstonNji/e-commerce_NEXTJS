@@ -7,32 +7,47 @@ export async function DELETE(req, {params}) {
     try {
         const {id} = await params
 
+        // Check if product is tied to brand
+        const product = await pool.query(`
+            SELECT 
+                p.id, 
+                p.title,
+                b.brand_name 
+            FROM products p
+            JOIN brand b ON p.brand = b.id
+            WHERE p.brand = $1
+            LIMIT 1;
+        `, [id])
+        if(product.rows[0]){
+            return NextResponse.json({
+                success: false,
+                message: "A product is already tied to this brand. Delete or update that product first."
+            })
+        }
+
+        // Deleting brand
         const query = `
             DELETE FROM brand
             WHERE id = $1
             RETURNING *;
         `;
-
         const result = await pool.query(query,[id])
-
-        console.log(result)
-
         if(result.rows.length === 0){
             return NextResponse.json({
                 success: false,
-                messaage: "Couldn't find brand"
+                message: "Couldn't find brand"
             })
         }
-
         return NextResponse.json({
             success: true,
-            messaage: "Brand sucessfully deleted"
+            message: "Brand sucessfully deleted"
         })
     } catch (error) {
+        console.log(error, '****Error')
         return NextResponse.json({
             success: false,
-            messaage: 'An error occured',
-            error: error.messaage
+            message: 'An error occured',
+            error: error
         })
     }
 

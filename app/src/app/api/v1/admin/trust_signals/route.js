@@ -2,10 +2,11 @@ import { NextResponse } from "next/server";
 import { createTrustSignal,getAllTrustSignals } from "@/lib/models/admin/trust_signals"; 
 
 
-export async function POST(req) {
+export async function POST(req) { 
     try {
-        const formData = await req.formData();
+        const formData = await req.json();
         const result = await createTrustSignal(formData)
+
         if(!result){
             return NextResponse.json({
                 success: false, 
