@@ -179,14 +179,15 @@ export async function getAllProducts() {
 }
 
 export async function updateProduct(formData,productId) {
+    console.log(formData, '***formData receivedBackend')
     try {
         // Extracting field
         const title = formData.get('title') 
         const description = formData.get('description')
         const price = formData.get('price')
         const discountPercentage = formData.get('discountPercentage')
-        const brand = formData.get('brand')
-        const category = formData.get('category')
+        const brand = formData.get('brandId')
+        const category = formData.get('categoryId')
         const weight = formData.get('weight') 
         const sku = formData.get('sku')
         const width = formData.get('width')
@@ -301,6 +302,54 @@ export async function deleteProduct(productId) {
         throw error
     }
     
+}
+
+export async function getSingleProduct(productId){
+    try {
+        const result = await pool.query(
+            `
+                SELECT 
+                    p.id,
+                    p.title,
+                    p.price,
+                    p.discount_percentage,
+                    p.description,
+                    p.sku,
+                    p.weight,
+                    p.width,
+                    p.height,
+                    p.depth,
+                    p.warranty_info,
+                    p.return_policy,
+                    p.thumbnail_img,
+                    p.is_deleted,
+                    p.is_featured,
+                    p.display,
+                    p.inventory,
+                    ARRAY_AGG(pi.image) AS images,
+                    c.title AS category,
+                    b.brand_name AS brand,
+                    p.brand as brand_Id,
+                    p.category as category_Id
+                FROM products p
+                LEFT JOIN product_images pi
+                    ON p.id = pi.product_id
+                JOIN category c
+                    ON p.category = c.id
+                JOIN brand b
+                    ON p.brand = b.id
+                WHERE 
+                    p.id = $1 AND is_deleted = false
+                GROUP BY p.id, c.title, b.brand_name;
+            `, 
+        [productId])
+
+        return result.rows[0]
+        
+    } catch (error) {
+        console.log(error)
+        throw error
+    }
 }
 
 

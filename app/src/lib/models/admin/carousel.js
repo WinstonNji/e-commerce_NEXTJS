@@ -70,6 +70,8 @@ export async function updateCarousel(formData, carouselId) {
         const imageFile = formData.get('image')
         const targetProduct_id = formData.get('targetProduct')
         const display = formData.get('display')
+
+        console.log(imageFile)
         // handle Image Upload
         const imageUrl = await getUrl(imageFile, `e-commerce/carousel`)
 
