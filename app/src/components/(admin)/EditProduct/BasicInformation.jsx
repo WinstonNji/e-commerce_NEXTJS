@@ -48,8 +48,8 @@ function BasicInformation({formData = {}, handleInputChange, categories = [], al
               <select 
                 className="select select-bordered w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                 onChange={handleInputChange}
-                name='brand'
-                value={formData.brand || ''}
+                name='brandId'
+                value={formData.brandId}
                 required
               >
                 <option value=''>Select Brand</option>
@@ -69,8 +69,8 @@ function BasicInformation({formData = {}, handleInputChange, categories = [], al
               <select 
                 className="select select-bordered w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                 onChange={handleInputChange}
-                name='category'
-                value={formData.category || ''}
+                name='categoryId'
+                value={formData.categoryId}
                 required
               >
                 <option value=''>Select Category</option>
@@ -111,7 +111,7 @@ function BasicInformation({formData = {}, handleInputChange, categories = [], al
                 name="discountPercentage"
                 value={formData.discountPercentage}
                 onChange={handleInputChange}
-                step="0.01"
+                step="1"
                 min="0"
                 max="100"
                 className='input input-bordered w-full focus:outline-none focus:ring-2 focus:ring-blue-500'

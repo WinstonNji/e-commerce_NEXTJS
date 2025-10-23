@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Upload } from 'lucide-react'
 import { Plus } from 'lucide-react'
 import Image from 'next/image'
@@ -6,14 +6,17 @@ import { X } from 'lucide-react'
 
 function ProductImages({
     thumbnailImg,
-    product,
+    productThumbnail,
     images,
+    productImages,
     handleAddNewImage,
     handleChangeSliderImg,
     handleRemoveImage,
-    setThumbnailImg
-
+    handleThumbnailImg
 }) {
+
+    const placeHolder = 'https://www.aputf.org/wp-content/uploads/2015/06/default-placeholder.png'
+
   return (
         <div className='bg-white rounded-xl shadow-sm p-6'>
             <h3 className='text-xl font-semibold mb-6 text-gray-800'>Product Images</h3>
@@ -25,7 +28,7 @@ function ProductImages({
                 <div className='relative h-80 w-full lg:w-96 bg-gray-100 rounded-lg overflow-hidden shadow-md'>
                 <Image 
                     fill
-                    src={!thumbnailImg ? product?.thumbnail : URL.createObjectURL(thumbnailImg)}
+                    src={thumbnailImg ? URL.createObjectURL(thumbnailImg) : productThumbnail ? productThumbnail : placeHolder }
                     className='object-contain'
                     alt='Product thumbnail'
                 />
@@ -43,7 +46,7 @@ function ProductImages({
                     className='hidden' 
                     id="thumbnailImage" 
                     accept="image/*"
-                    onChange={(e) => setThumbnailImg(e.target.files[0])} 
+                    onChange={handleThumbnailImg} 
                     />
                 </label>
                 </div>
@@ -61,7 +64,7 @@ function ProductImages({
                     >
                     <Image 
                         fill
-                        src={!image ? product.images[index] : URL.createObjectURL(image)}
+                        src={typeof(image) === 'string' ? image : URL.createObjectURL(image)}
                         className='object-contain'
                         alt={`Product image ${index + 1}`}
                     />

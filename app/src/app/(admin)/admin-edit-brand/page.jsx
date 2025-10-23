@@ -11,7 +11,7 @@ function page() {
 	const [nameInput, setNameInput] = useState("")
 	const [editingIndex, setEditingIndex] = useState(null)
 	const inputRef = useRef(null)
-	const [isLoading,setIsLoading] = useState(false)
+	const [isLoading, setIsLoading] = useState(false)
 
 	useEffect(() => {
 		fetchAllBrands()
@@ -154,7 +154,6 @@ function page() {
 				autoClose:3000
 			})
 		}
-		
 	}
 
 	const handleInlineEdit = (index, value) => {
@@ -209,19 +208,14 @@ function page() {
 					</div>
 
 					<div className='p-6 md:p-8'>
-						{brands?.length === 0 ? (
+						{isLoading ? (
+							<div className='flex flex-col items-center justify-center py-16'>
+								<span className="loading loading-spinner loading-lg text-accent mb-4"></span>
+								<p className='text-base-content/70'>Loading brands...</p>
+							</div>
+						) : brands?.length === 0 ? (
 							<div className='text-center py-12 text-base-content/60'>
-								<p className='text-lg'>
-									{brands?.length === 0 && !isLoading ? (
-										<p>No brands yet. Add your first brand above!</p>
-									) : isLoading ? (
-										<div className="w-full text-center flex items-center gap-2">
-											<span>Fetching All Brands...</span>
-											<span className="loading loading-bars loading-xl"></span>
-										</div>
-									) : null}
-
-								</p>
+								<p className='text-lg'>No brands yet. Add your first brand above!</p>
 							</div>
 						) : (
 							<div className='space-y-2'>
@@ -231,11 +225,11 @@ function page() {
 										className={`flex items-center justify-between p-4 rounded-lg border transition-all group ${
 											editingIndex === idx
 												? 'border-success/60 bg-success/10'
-												: 'border-base-300 hover:border-base-300 hover:bg-accent '
+												: 'border-base-300 hover:border-base-300 hover:bg-accent'
 										}`}
 									>
 										<div
-											className={`flex-1 font-medium  cursor-pointer group-hover:text-white ${editingIndex? 'group-hover:text-black' : 'text-black'}`}
+											className={`flex-1 font-medium cursor-pointer group-hover:text-white ${editingIndex === idx ? 'group-hover:text-black' : 'text-black'}`}
 											onClick={() => handleInlineEdit(idx, brand?.brand_name)}
 										>
 											{brand?.brand_name}
@@ -243,7 +237,7 @@ function page() {
 										<div className='flex gap-2'>
 											<button
 												type='button'
-												className='btn btn-ghost btn-sm text-white btn-success '
+												className='btn btn-ghost btn-sm text-white btn-success'
 												onClick={() => handleEdit(idx)}
 												title="Edit brand"
 											>
@@ -265,14 +259,14 @@ function page() {
 					</div>
 				</div>
 
-				<div className='mt-6 text-center text-sm text-base-content/70'>
-					{brands?.length} {brands?.length === 1 ? 'brand' : 'brands'} in total
-				</div>
+				{!isLoading && (
+					<div className='mt-6 text-center text-sm text-base-content/70'>
+						{brands?.length} {brands?.length === 1 ? 'brand' : 'brands'} in total
+					</div>
+				)}
 			</div>
 		</div>
 	)
 }
 
 export default page
-
-

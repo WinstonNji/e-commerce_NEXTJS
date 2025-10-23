@@ -72,7 +72,7 @@ const SideMobile = () => {
     const isActive = (path) => pathname === path
 
     return (
-        <div className='flex fixed bottom-0 left-0 right-0 gap-4 bg-secondary justify-center font-bold overflow-x-auto pl-42 sm:pl-0 z-100'>
+        <div className='flex fixed bottom-0 left-0 right-0 gap-4 bg-secondary justify-start font-bold overflow-x-auto  z-100 min-w-screen px-4'>
             {navItems.map(({ path, icon: Icon, label }) => (
                 <Link key={path} href={path}>
                     <div 
