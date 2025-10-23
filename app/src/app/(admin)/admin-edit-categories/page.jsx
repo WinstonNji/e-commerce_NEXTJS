@@ -35,7 +35,7 @@ return (
             <Suspense fallback={
                 <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-6'>
                 {[...Array(3)].map((_,idx) => (
-                    <div key={idx} className="flex w-full md:w-64 lg:w-72 flex-col gap-2">
+                    <div key={idx} className="flex flex-col gap-2">
                         <div className="skeleton h-56 w-full"></div>
                         <div className="skeleton h-4 w-28"></div>
                         <div className="skeleton h-4 w-full"></div>

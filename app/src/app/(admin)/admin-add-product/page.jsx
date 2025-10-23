@@ -19,6 +19,7 @@ function page() {
     const [showDialog, setShowDialog] = useState(false)
 
 
+    // Fetch Brands and Categories
     useEffect(() => {
         const fetchCategory = async () => {
             try {

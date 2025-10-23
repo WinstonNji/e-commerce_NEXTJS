@@ -1,16 +1,44 @@
 "use client"
-import React, { useState } from 'react'
-import { products } from '../../../../public/product'
+import React, { useEffect, useState } from 'react'
 import ProductCard from '@/components/(public)/Shared/ProductCard'
+import { toast } from 'react-toastify'
 
 
-function page() {
+ function page() {
 
-  const [displayProducts, setDisplayProducts] = useState(products)
-  const [allProducts] = useState(products)
+  const [loading, setLoading] = useState(true)
+  const [allProducts, setAllProducts] = useState([])
+  const [displayProducts, setDisplayProducts] = useState(allProducts)
+ 
+
+  const fetchProducts = async () => {
+    try {
+      const res = await fetch('api/v1/admin/products', {cache : 'no-cache'})
+      if(!res.ok){
+        throw Error("Couldn't fetch products")
+      }
+      const result = await res.json()
+      setAllProducts(result.data)      
+    } catch (error) {
+      toast.error('An error occured')
+    }
+    finally{
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchProducts()
+  }, [])
+
+  useEffect(() => {
+    setDisplayProducts(allProducts)
+  }, [allProducts])
+  
+
 
   const handleSearch = (e) => { 
-    const query = e.target.value
+    const query = e.target.value.trim()
     
     if(query.length > 0){
       const filterArr = displayProducts.filter((product) => product.title.toLowerCase().includes(query.toLowerCase()))
@@ -53,10 +81,20 @@ function page() {
         </div>
 
         
-        <div className='grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4  gap-y-8'>
-            {displayProducts.map((product,index) => (
-                <ProductCard key={index} product={product} admin={true}/>
-            ))}
+        <div >
+          {loading ? (
+            <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-8'>
+              {[...Array(8)].map((_,idx) => (
+                  <div key={idx} className="skeleton h-72  "></div>
+              ))}
+            </div>
+          ) : (
+            <div className='grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4  gap-y-8'>
+              {displayProducts.map((product,index) => (
+                  <ProductCard key={index} product={product} admin={true}/>
+              ))}
+            </div>
+          )}
         </div>
     </div>
   )

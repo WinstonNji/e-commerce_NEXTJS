@@ -63,7 +63,7 @@ function ProductCard({product, singleTrue = false, admin = false}) {
       
         <div className='relative h-70 bg-[#F0F0F2] '>
           <Image
-            src={product.thumbnail}
+            src={product.thumbnail_img}
             fill={true}
             className='object-contain group-hover:scale-110 transition-all duration-300 ease-in-out  '
             alt={`${product.title} image`}

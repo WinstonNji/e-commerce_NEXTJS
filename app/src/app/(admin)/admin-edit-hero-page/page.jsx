@@ -1,59 +1,11 @@
 import React from 'react'
 import AddHeroPage from '@/components/(admin)/HeroImage/AddHeroPage'
-import CarouselCards from '@/components/(admin)/HeroImage/CarouselCards'
+import Carousel_List from '@/components/(admin)/HeroImage/Carousel_List'
+import { Suspense } from 'react'
 
-function page() {
 
-  const carouselContent = [
-    {
-      imgSrc: "https://cdn.dummyjson.com/product-images/beauty/essence-mascara-lash-princess/1.webp",
-      captionText: "Essence Mascara Lash Princess",
-      mainText: "Achieve dramatic lashes with this volumizing and lengthening mascara.",
-      actionText: "Shop Now",
-      navigationLink:  `/product/${1}`,
-      navigationLinkText: "Learn More",
-    },
-    {
-      imgSrc: "https://cdn.dummyjson.com/product-images/beauty/eyeshadow-palette-with-mirror/1.webp",
-      captionText: "Eyeshadow Palette with Mirror",
-      mainText: "Versatile eyeshadow shades for stunning eye looks, anywhere.",
-      actionText: "Shop Now",
-      navigationLink: "/all-products/beauty",
-      navigationLinkText: "See More",
-    },
-    {
-      imgSrc: "https://cdn.dummyjson.com/product-images/beauty/powder-canister/1.webp",
-      captionText: "Powder Canister",
-      mainText: "Lightweight and translucent formula for a smooth matte finish.",
-      actionText: "Shop Now",
-      navigationLink: "/all-products/beauty",
-      navigationLinkText: "Learn More",
-    },
-    {
-      imgSrc: "https://cdn.dummyjson.com/product-images/beauty/red-lipstick/1.webp",
-      captionText: "Red Lipstick",
-      mainText: "Classic bold color for long-lasting vibrant lips.",
-      actionText: "Shop Now",
-      navigationLink: "/all-products/beauty",
-      navigationLinkText: "See More",
-    },
-    {
-      imgSrc: "https://cdn.dummyjson.com/product-images/beauty/red-nail-polish/1.webp",
-      captionText: "Red Nail Polish",
-      mainText: "Rich, glossy red hue for vibrant polished nails.",
-      actionText: "Shop Now",
-      navigationLink: "/all-products/beauty",
-      navigationLinkText: "Learn More",
-    },
-    {
-      imgSrc: "https://cdn.dummyjson.com/product-images/fragrances/calvin-klein-ck-one/1.webp",
-      captionText: "Calvin Klein CK One",
-      mainText: "Classic unisex fragrance with fresh and clean scent.",
-      actionText: "Shop Now",
-      navigationLink: "/all-products/fragrances",
-      navigationLinkText: "See More",
-    },
-  ]
+async function page() {
+  
 
   return (
     <div className='min-h-screen w-full pb-0 overflow-y-hidden -mt-2.5 md:mt-0'>
@@ -76,11 +28,17 @@ function page() {
           defaultChecked 
         />
         <div className="tab-content bg-white border border-base-300 p-6 transition-all duration-300 h-full overflow-y-auto">
-          <div className='relative flex flex-col gap-8'>
-            {carouselContent.map((product, idx) => (
-              <CarouselCards key={idx} product={product}/>
-            ))}
-          </div>
+          <Suspense fallback={
+            <div className='flex flex-col gap-8'>
+              {[...Array(2)].map((_,idx) => (
+                <div key={idx} className="skeleton h-52 w-full"></div>
+              ))}
+              
+            </div>
+          }>
+            <Carousel_List /> 
+          </Suspense>
+          
         </div>
       </div>
     </div>
