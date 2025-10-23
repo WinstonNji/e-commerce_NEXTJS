@@ -5,7 +5,7 @@ export async function getUrl(file, filePath = 'e-commerce/'){
     try {
         console.log(file, "***********file received")
         
-        if(typeof file === 'string'){
+        if( file instanceof File  == false){
             return file
         }
 
