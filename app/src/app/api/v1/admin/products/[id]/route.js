@@ -1,6 +1,7 @@
 import { deleteProduct, getAllProducts, getSingleProduct, updateProduct } from "@/lib/models/admin/productController";
 import { NextResponse } from "next/server";
 
+
 export async function PATCH(req, {params}) {
     try {
         const {id} = await params
@@ -59,3 +60,30 @@ export async function DELETE(req, {params}){
     }
 }
 
+export async function GET(req, {params}) {
+    try {
+        const {id} = await params
+        const product = await getSingleProduct(id)
+
+        console.log(id, '***gotten id')
+
+        if(!product){
+            return NextResponse.json({
+                success: false,
+                message: " Couldn't find product",
+            })
+        }
+
+        return NextResponse.json({
+            success: true,
+            message: 'Product sucessfully fetched',
+            data: product
+        })
+    } catch (error) {
+        return NextResponse.json({
+            success: false,
+            message: 'Ooops. An error occured',
+            error: error.message
+        })
+    }
+}

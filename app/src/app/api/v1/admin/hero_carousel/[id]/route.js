@@ -13,7 +13,14 @@ export async function PATCH(req, {params}){
             return NextResponse.json({message: 'Carousel not found'}, {status: 404})
         }
 
-        return NextResponse.json({message: 'Carousel updated successfully', data: result}, {status: 200})
+        return NextResponse.json(
+            {
+                message: 'Carousel updated successfully', 
+                data: result, 
+                success: true
+            },
+            {status: 200}
+        )
     } catch (error) {
         console.error('Error updating carousel:', error)
         return NextResponse.json({message: 'Internal Server Error'}, {status: 500})
