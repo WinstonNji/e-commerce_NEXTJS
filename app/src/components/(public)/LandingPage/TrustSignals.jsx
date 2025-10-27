@@ -3,26 +3,26 @@ import { assets } from '../../../../public/assets'
 import Image from 'next/image'
 import IconCard from '@/components/Shared/Icons/IconCard'
 
-function TrustSignals() {
+function TrustSignals({trustSignals}) {
 
-    const trustSignals = [
-        {
-            imgSrc : assets.freeShippingIcon,
-            text: 'Free shipping on items over $50'
-        },
-        {
-            imgSrc : assets.thirtyDayReturnIcon,
-            text : '30-Day Returns - Hassle-free exchanges'
-        },
-        {
-            imgSrc: assets.customerServiceIcon,
-            text: "24/7 Customer Support - We're here to help"
-        },
-        {
-            imgSrc: assets.creditCardSecureIcon,
-            text: "Secure Payments - Your data is protected"
-        }
-    ]
+    // const trustSignals = [
+    //     {
+    //         imgSrc : assets.freeShippingIcon,
+    //         text: 'Free shipping on items over $50'
+    //     },
+    //     {
+    //         imgSrc : assets.thirtyDayReturnIcon,
+    //         text : '30-Day Returns - Hassle-free exchanges'
+    //     },
+    //     {
+    //         imgSrc: assets.customerServiceIcon,
+    //         text: "24/7 Customer Support - We're here to help"
+    //     },
+    //     {
+    //         imgSrc: assets.creditCardSecureIcon,
+    //         text: "Secure Payments - Your data is protected"
+    //     }
+    // ]
 
   return (
 <div className="py-8 px-4 bg-primary">

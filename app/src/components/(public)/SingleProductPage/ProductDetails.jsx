@@ -27,15 +27,15 @@ function ProductDetails({product}) {
                             <div className='grid grid-cols-3 gap-4 text-sm'>
                                 <div className='text-center'>
                                     <p className='font-medium text-base-content/60'>Width</p>
-                                    <p className='text-base-content font-semibold'>{product?.dimensions.width}</p>
+                                    <p className='text-base-content font-semibold'>{product?.width}</p>
                                 </div>
                                 <div className='text-center'>
                                     <p className='font-medium text-base-content/60'>Height</p>
-                                    <p className='text-base-content font-semibold'>{product?.dimensions.height}</p>
+                                    <p className='text-base-content font-semibold'>{product?.height}</p>
                                 </div>
                                 <div className='text-center'>
                                     <p className='font-medium text-base-content/60'>Depth</p>
-                                    <p className='text-base-content font-semibold'>{product?.dimensions.depth}</p>
+                                    <p className='text-base-content font-semibold'>{product?.depth}</p>
                                 </div>
                             </div>
                         </div>
@@ -46,14 +46,14 @@ function ProductDetails({product}) {
                     <div className='space-y-2'>
                         <p className='font-medium'>Warranty Information</p>
                         <p className='text-base-content text-sm leading-relaxed pl-4'>
-                            {product?.warrantyInformation}
+                            {product?.warranty_info}
                         </p>
                     </div>
 
                     <div className='space-y-2'>
                         <p className='font-medium'>Return Policy</p>
                         <p className='text-base-content text-sm leading-relaxed pl-4'>
-                            {product?.returnPolicy}
+                            {product?.return_policy}
                         </p>
                     </div>
                 </div>

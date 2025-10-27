@@ -11,7 +11,7 @@ function page() {
 	const [nameInput, setNameInput] = useState("")
 	const [editingIndex, setEditingIndex] = useState(null)
 	const inputRef = useRef(null)
-	const [isLoading, setIsLoading] = useState(false)
+	const [isLoading, setIsLoading] = useState(true)
 
 	useEffect(() => {
 		fetchAllBrands()
@@ -19,7 +19,6 @@ function page() {
 
 	const fetchAllBrands = async () => {
 		try {
-			setIsLoading(true)
 			const res = await fetch('/api/v1/general/brand')
 			if(!res.ok){
 				throw new Error("Couldn't fetch product")

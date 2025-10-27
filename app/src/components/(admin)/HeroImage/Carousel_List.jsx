@@ -3,9 +3,7 @@ import CarouselCards from './CarouselCards'
 
 async function getCarouselData() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/v1/admin/hero_carousel`, {
-      cache: 'no-store'
-    })
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/admin/hero_carousel`, {credentials : 'include'})
     
     if (!res.ok) {
       throw new Error('Failed to fetch carousel data')

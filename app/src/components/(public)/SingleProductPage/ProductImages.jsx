@@ -10,8 +10,8 @@ function ProductImages({product}) {
     }, [product])
 
     return (
-        <div className='h-fit'>
-            <div className='flex flex-col w-full items-center'>
+        <div className='h-fit flex justify-center items-center '>
+            <div className='flex flex-col w-full items-center '>
                 {isLoading && (
                     <div className={`skeleton opacity-100 w-sm md:w-lg h-96`}></div>
                 )}
@@ -21,7 +21,7 @@ function ProductImages({product}) {
                         <figure>
                             {product.images.length === 1 ? (
                                 <img
-                                    src={product.thumbnail}
+                                    src={product.thumbnail_img}
                                     alt={product.title}
                                     className="w-full"
                                 />
@@ -35,7 +35,7 @@ function ProductImages({product}) {
                     </div>
                 )}
 
-                {product.images.length > 1 && (
+                {product.images.length >= 1 && (
                     <div className='mt-4 flex gap-4 items-center justify-center cursor-pointer w-xs'>
                         {product.images.map((image, index) => (
                             isLoading ? (
@@ -44,7 +44,7 @@ function ProductImages({product}) {
                                 <div 
                                     onClick={() => setDisplayIndex(index)} 
                                     key={index} 
-                                    className={`card shadow-sm transition-all duration-700 w-full ${displayIndex === index ? 'bg-base-300 ring ring-accent' : 'bg-secondary'}`}
+                                    className={`card shadow-sm transition-all duration-700 w-1/2 ${displayIndex === index ? 'bg-base-300 ring ring-accent' : 'bg-secondary'}`}
                                 >
                                     <figure>
                                         <img

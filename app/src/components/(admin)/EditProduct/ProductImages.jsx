@@ -64,7 +64,8 @@ function ProductImages({
                     >
                     <Image 
                         fill
-                        src={typeof(image) === 'string' ? image : URL.createObjectURL(image)}
+                        src={typeof(image) === 'string' ? 
+                                image : image ? URL.createObjectURL(image) : placeHolder}
                         className='object-contain'
                         alt={`Product image ${index + 1}`}
                     />

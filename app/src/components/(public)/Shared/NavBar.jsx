@@ -1,28 +1,39 @@
 "use client"
 import React, { useState } from 'react'
 import Link from 'next/link'
-import { Search } from 'lucide-react'
 import { User } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import { MenuIcon } from 'lucide-react'
-import { X } from 'lucide-react'
 import { ShoppingCart } from 'lucide-react'
-import { ShoppingBag } from 'lucide-react'
+import { UserContext } from '@/context/userContext'
+import { useContext } from 'react'
+import { LogOut } from 'lucide-react'
+import { CartContext } from '@/context/cartContext'
 
 function NavBar() {
-    
+    const {isLoggedIn, handleLogout} = useContext(UserContext)
+    const {cartLength} = useContext(CartContext)
+
+    console.log(cartLength, '**cartLength')
     
     return (
         <div className='text-black font-semibold '>
-            <MobileNavBar />
-            <DesktopNavBar />
+            <MobileNavBar 
+                isLoggedIn = {isLoggedIn}
+                handleLogout = {handleLogout}
+                />
+            <DesktopNavBar 
+                isLoggedIn = {isLoggedIn}
+                handleLogout = {handleLogout}
+                cartLength = {cartLength}
+            />
             <hr />
         </div>
         
     )
 }
 
-function MobileNavBar (){
+function MobileNavBar ({isLoggedIn, handleLogout}){
 
     const [menuIsOpen, setMenu] = useState(false)
     const pathname = usePathname()
@@ -56,20 +67,26 @@ function MobileNavBar (){
                             </Link>
                         </li>
                         <li>
-                            <Link href={'/admin-dashboard'} className='ring rounded-full px-2 py-1 hover:bg-accent hover:text-white transition-all duration-200 ease-in-out'>
-                                Admin Dashboard
-                            </Link>
-                        </li>
-                        <li>
                             <Link href={'/cart'} className={` duration-150 transition-all ease-in-out ${pathname === '/cart' ? 'border-b-2 border-accent' : "hover:border-accent hover:border-b-2"}`}>
                                 <ShoppingCart /> Cart
                             </Link>
-                        </li>                        
+                        </li>  
+                        <li>
+                            <Link href={'/admin-dashboard'} className=' btn-outline btn rounded-lg px-2 py-1  hover:bg-accent hover:text-white transition-all duration-200 ease-in-out'>
+                                Admin Dashboard
+                            </Link>
+                        </li>                
                         <li className='hover:underline underline-offset-4 decoration-accent'>
-                            <div className='flex '>
-                                <User></User>
-                                <span>Account</span>
-                            </div>
+                            {isLoggedIn ? (
+                                <button onClick={handleLogout} className='flex items-center justify-center gap-2 hover:border-b-2 border-accent transition-all duration-100 ease-in-out btn text-black btn-outline hover:btn-accent hover:text-white'>
+                                    <span>Logout</span>
+                                    <LogOut />
+                                </button>
+                            ) : (
+                                <Link href={'/login'} className='flex hover:border-b-2 border-accent transition-all duration-100 ease-in-out rounded-xl btn text-black btn-outline hover:btn-accent hover:text-white'>
+                                    <span>Login</span>
+                                </Link>
+                            )}
                         </li>
                     </ul>
                   </div>
@@ -82,7 +99,8 @@ function MobileNavBar (){
     )
 }
 
-function DesktopNavBar() {
+function DesktopNavBar({isLoggedIn, handleLogout, cartLength}) {
+    console.log(isLoggedIn, 'isLoggedIn')
     const pathname = usePathname()
     return (
     <div className='hidden md:block' >
@@ -90,7 +108,7 @@ function DesktopNavBar() {
             <div className='flex-1'>
                 <h1 className='text-3xl'>Shop<span className='text-accent'>Quick</span></h1>
             </div>
-            <ul className='flex gap-6'>
+            <ul className='flex gap-6 items-center'>
                 <li>
                     <Link href={'/'} className={` duration-150 transition-all ease-in-out hover:border-accent hover:border-b-2`}>
                         Home
@@ -105,22 +123,29 @@ function DesktopNavBar() {
                     <Link href={'/cart'} className={` duration-150 transition-all ease-in-out ${pathname === '/cart' ? 'border-b-2 border-accent' : "hover:border-accent hover:border-b-2"} flex gap-2`}>
                         <div className='relative flex justify-center items-center'>
                             <ShoppingCart />
-                            <span className='absolute bottom-2 left-4 text-accent font-bold pl-2'>3</span>
+                            <span className='absolute bottom-2 left-4 text-accent font-bold pl-2'>{cartLength || null}</span>
                         </div>
                          Cart
                         
                     </Link>
                 </li>      
                 <li>
-                    <Link href={'/admin-dashboard'} className='ring rounded-full px-2 py-1 hover:bg-accent hover:text-white transition-all duration-200 ease-in-out'>
+                    <Link href={'/admin-dashboard'} className=' btn-outline btn rounded-lg px-2 py-1  hover:bg-accent hover:text-white transition-all duration-200 ease-in-out'>
                         Admin Dashboard
                     </Link>
                 </li>
                 <li>
-                    <Link href={'/profile'} className='flex hover:border-b-2 border-accent transition-all duration-100 ease-in-out'>
-                        <User></User>
-                        <span>Account</span>
-                    </Link>
+                    {isLoggedIn ? (
+                        <button onClick={handleLogout} className='flex items-center justify-center gap-2 hover:border-b-2 border-accent transition-all duration-100 ease-in-out btn text-black btn-outline hover:btn-accent hover:text-white'>
+                            <span>Logout</span>
+                            <LogOut />
+                        </button>
+                    ) : (
+                        <Link href={'/login'} className='flex hover:border-b-2 border-accent transition-all duration-100 ease-in-out rounded-xl btn text-black btn-outline hover:btn-accent hover:text-white'>
+                            <span>Login</span>
+                        </Link>
+                    )}
+                    
                 </li>
             </ul>
         </div>

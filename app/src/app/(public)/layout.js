@@ -2,6 +2,9 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css"
 import NavBar from "@/components/(public)/Shared/NavBar";
 import Footer from "@/components/(public)/Shared/Footer";
+import UserContextProvider from "@/context/userContext";
+import { ToastContainer } from "react-toastify";
+import CartContextProvider from "@/context/cartContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,13 +28,16 @@ export default function RootLayout({ children, url }) {
         
         className={`${geistSans.variable} ${geistMono.variable} bg-primary antialiased `}
       >
-        
-        <div className="mx-7 md:mx-12 lg:px-32">
-          <NavBar />
-          {children}
-        </div>
-        
-        <Footer />
+        <UserContextProvider>
+          <CartContextProvider>
+            <div className="mx-7 md:mx-9 lg:px-32 ">
+              <NavBar />
+              {children}
+            </div>
+            <Footer />
+          </ CartContextProvider>
+        </UserContextProvider>
+        <ToastContainer />
       </body>
     </html>
   );

@@ -18,45 +18,47 @@ function page() {
     const [allBrands, setAllBrands] = useState([])
     const [showDialog, setShowDialog] = useState(false)
 
+     const fetchCategory = async () => {
+        try {
+            const res = await fetch('/api/v1/admin/category')
+            if(!res.ok){
+                throw new Error('Failed to create new product')
+            }
+            const result = await res.json()
+            return result.data
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    const fetchBrands = async () => {
+        try {
+            const res = await fetch('/api/v1/general/brand')
+            if(!res.ok){
+                throw new Error("An error occured, couldn't fetch brands")
+            }
+            const result = await res.json()
+            if(!result){
+                throw new Error("Couldn't get brands")
+            }
+            return result.data
+
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
 
     // Fetch Brands and Categories
     useEffect(() => {
-        const fetchCategory = async () => {
-            try {
-                const res = await fetch('/api/v1/admin/category')
-                if(!res.ok){
-                    throw new Error('Failed to create new product')
-                }
-                const result = await res.json()
-                let categories = result.data
-                setCategories(categories)
-            } catch (error) {
-                console.error(error)
-            }
+        const fetchAll = async () => {
+            const [categories, brands] = await Promise.all([fetchCategory(),fetchBrands()])
+            setCategories(categories)
+            setAllBrands(brands)
         }
 
-        const fetchBrands = async () => {
-            try {
-                const res = await fetch('/api/v1/general/brand')
-                if(!res.ok){
-                    throw new Error("An error occured, couldn't fetch brands")
-                }
-                const result = await res.json()
-                if(!result){
-                    throw new Error("Couldn't get brands")
-                }
-
-                console.log(result.data, '***brands fetched')
-
-                setAllBrands(result.data)
-
-            } catch (error) {
-                console.error(error)
-            }
-        }
+        fetchAll()
         
-        fetchCategory()
-        fetchBrands()
     }, [])
 
     const handleThumbnailImg = (e) => {
@@ -117,7 +119,7 @@ function page() {
           ...prev,
           [name]: value
         }))
-      }
+    }
 
     const handleToggle = (e) => {
         const {name,checked} = e.target
@@ -135,8 +137,8 @@ function page() {
         description: "",
         price: "",
         discountPercentage: "",
-        brand: "",
-        category: "",
+        brandId: "",
+        categoryId: "",
         weight: "",
         sku: "",
         width: "",
@@ -155,8 +157,8 @@ function page() {
         description: originalProductData.description,
         price: originalProductData.price,
         discountPercentage: originalProductData.discountPercentage,
-        brand: originalProductData.brand,
-        category: originalProductData.category,
+        brandId: originalProductData.brandId,
+        categoryId: originalProductData.categoryId,
         weight: originalProductData.weight,
         sku: originalProductData.sku,
         width: originalProductData.width,
@@ -239,22 +241,22 @@ function page() {
             setImages([false])
         }
     }
-
+    
     return (
         <div className='min-h-screen mb-25'>
 
             {showDialog && (
-              <dialog open className="modal">
+                <dialog open className="modal">
                 <div className="modal-box">
-                  <h3 className="font-bold text-lg">Missing Thumbnail or Product Image</h3>
-                  <p className="py-4">Please upload a thumbnail image and atleast one product image before creating product.</p>
-                  <div className="modal-action">
+                    <h3 className="font-bold text-lg">Missing Thumbnail or Product Image</h3>
+                    <p className="py-4">Please upload a thumbnail image and atleast one product image before creating product.</p>
+                    <div className="modal-action">
                     <button className="btn btn-outline hover:btn-error" onClick={() => setShowDialog(false)}>
-                      Close
+                        Close
                     </button>
-                  </div>
+                    </div>
                 </div>
-              </dialog>
+                </dialog>
             )}
 
             <form onSubmit={handleSubmit} className='flex flex-col gap-8'>

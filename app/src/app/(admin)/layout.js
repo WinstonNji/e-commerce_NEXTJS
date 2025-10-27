@@ -1,6 +1,9 @@
 import "./globals.css"
 import SideBar from "@/components/(admin)/Shared/SideBar"
 import { ToastContainer } from "react-toastify"
+import { cookies } from "next/headers"
+import { redirect } from "next/navigation"
+import jwt from'jsonwebtoken'
 
 export const metadata = {
   title: 'Next.js',
@@ -8,7 +11,26 @@ export const metadata = {
 }
 
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("auth_token")?.value;
+
+  if(!token){
+    redirect('/login')
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.SECRET_JWT_TOKEN)
+    const {role} = decoded
+
+    if(role !== 'admin'){
+      redirect('/login')
+    }
+  } catch (error) {
+    console.error(error)
+    redirect('/login')
+  }
+
   return (
     <html lang="en" data-theme='mytheme'>
       <body className="bg-primary flex md:flex-row flex-col gap-8">

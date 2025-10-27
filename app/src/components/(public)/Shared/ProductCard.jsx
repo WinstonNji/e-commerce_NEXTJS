@@ -55,36 +55,37 @@ function ProductCard({product, singleTrue = false, admin = false}) {
 
   return (
     
-    <Link className={`group ring rounded-2xl overflow-hidden hover:-translate-y-1.5 transition-all duration-300 ease-in-out shadow-md hover:shadow-xl 
-      ${singleTrue ? 'min-w-sm' : ''}`} 
+    <Link  
       href={ !admin ? `/product/${product.id}` : `admin-edit-product/edit-product/${product.id}`}
-      
       >
-      
-        <div className='relative h-70 bg-[#F0F0F2] '>
-          <Image
-            src={product.thumbnail_img}
-            fill={true}
-            className='object-contain group-hover:scale-110 transition-all duration-300 ease-in-out  '
-            alt={`${product.title} image`}
-          />
-        </div>
-        <div className='overflow-ellipsis m px-2 pb-4 bg-secondary/20 group-hover:bg-secondary/30 pt-2'>
-          <p className='font-semibold whitespace-nowrap truncate text-lg group-hover:text-accent'>{product.title}</p>
-          <div className= {admin ? "hidden" : "block"} >
-            <p className='flex items-center text-xs '>
-              <span className='font-light'>
-                {product?.rating?.toString()?.slice(0,3)}
-              </span>
-              {returnStars(product.rating)}
-            </p>
-            <div className='flex w-full justify-between items-center lg:mt-0'>
-              <p className='font-bold text-lg text-accent '>${product.price}</p>
-              <button className='hidden md:block btn  btn-outline rounded-full group-hover:text-white group-hover:bg-accent font-semibold'>Buy now</button>
+        <div className={`group ring rounded-2xl overflow-hidden hover:-translate-y-1.5 transition-all duration-300 ease-in-out shadow-md hover:shadow-xl 
+            ${singleTrue ? 'min-w-sm' : ''}`}>
+            <div className='relative h-70 bg-[#F0F0F2] '>
+              <Image
+                src={product.thumbnail_img}
+                fill={true}
+                className='object-contain group-hover:scale-110 transition-all duration-300 ease-in-out  '
+                alt={`${product.title} image`}
+              />
             </div>
-          </div>
-          
+            <div className='overflow-ellipsis m px-2 pb-4 bg-secondary/20 group-hover:bg-secondary/30 pt-2'>
+              <p className='font-semibold whitespace-nowrap truncate text-lg group-hover:text-accent'>{product.title}</p>
+              <div className= {admin ? "hidden" : "block"} >
+                <p className='flex items-center text-xs '>
+                  <span className='font-light'>
+                    {product?.rating?.toString()?.slice(0,3)}
+                  </span>
+                  {returnStars(product.rating) > 3.5 ? returnStars(product.rating) : '' }
+                </p>
+                <div className='flex w-full justify-between items-center lg:mt-0'>
+                  <p className='font-bold text-lg text-accent '>${product.price}</p>
+                  <button className='hidden md:block btn  btn-outline rounded-full group-hover:text-white group-hover:bg-accent font-semibold'>Buy now</button>
+                </div>
+              </div>
+              
+            </div>
         </div>
+        
         
       </Link>
   )

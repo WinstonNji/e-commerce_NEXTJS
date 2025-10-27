@@ -4,27 +4,75 @@ import ProductDescription from '@/components/(public)/SingleProductPage/ProductD
 import ReviewSection from '@/components/(public)/SingleProductPage/ReviewSection'
 import ProductDetails from '@/components/(public)/SingleProductPage/ProductDetails'
 import SimilarProducts from '@/components/(public)/SingleProductPage/SimilarProducts'
-import { products } from '../../../../../public/product'
+import ProductCard from '@/components/(public)/Shared/ProductCard'
 
-function SingleProduct({params}) {
-    const {id} = params
 
-    // Fetch data once here
-    const product = products.find(p => p.id === Number(id))
-    const similarProducts = products.filter(p => 
-        p.category === product.category && p.id !== product.id
+async function SingleProduct({params}) {
+    const {id} =  params
+
+    const fetchSingleProduct = async (productId) => {
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/general/products/${productId}`, {cache : 'no-store'})
+
+        if(!res.ok){
+          throw Error("Couldn't fetch product")
+        }
+        const result = await res.json()
+        console.log(result.data, '****single Product')
+        return result.data
+      } catch (error) {
+        console.error(error)
+      } 
+    }
+
+    const fetchAllProducts = async () => {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/general/products`)
+      if(!res.ok){
+        throw Error("Couldn't fetch similar products")
+      }
+      const result = await res.json()
+      const allProducts = result.data
+      return allProducts
+    }
+
+    const [product, allProducts] = await Promise.all([fetchSingleProduct(id), fetchAllProducts()])
+
+    const similarProducts = allProducts.filter((p,idx) => p.category ===  product.category  && p.id !== id)
+
+    const featuredProducts = allProducts.filter(
+      (p) => p.is_featured && p.id !== id
     )
+
+
+    console.log(featuredProducts, 'featuredProducts')
 
     return (
         <div>
-            <div className='mt-3 flex flex-col md:flex-row gap-8 min-h-screen'>
-                <ProductImages product={product} />
-                <ProductDescription product={product} />
+            <div className='mt-3 flex flex-col lg:flex-row gap-8 min-h-screen md:min-h-fit max-w-7xl mx-auto'>
+              <ProductImages product={product} />
+              <ProductDescription product={product} productId = {id} />
             </div>
 
-            <ProductDetails product={product} />
-            <SimilarProducts products={similarProducts} />
-            <ReviewSection product={product} />
+            <div className='mt-8'>
+              <ProductDetails product={product} />
+            </div>
+            
+            {similarProducts.length > 0 ? (
+              <SimilarProducts products={similarProducts} />
+            ):(
+              <>
+                <p className='font-bold text-3xl text-accent mt-12'>Featured Products</p>
+
+                <div className='flex gap-6 w-full mt-5 overflow-x-auto py-5 px-5'>
+                    {featuredProducts.map((product, idx) => (
+                        <ProductCard key={idx} product={product} singleTrue={true} />
+                    ))}
+                </div>
+              </>
+              
+            )}
+            
+            {/* <ReviewSection product={product} /> */}
         </div>
     )
 }

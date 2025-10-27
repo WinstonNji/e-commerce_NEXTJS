@@ -1,11 +1,10 @@
 "use client"
 import React from 'react'
 import ProductCard from '../Shared/ProductCard'
-import { products } from '../../../../public/product' 
 import Link from 'next/link'
 
 
-function FeaturedProducts() {
+function FeaturedProducts({products}) {
     let isLoading = false
     
 
@@ -26,7 +25,7 @@ function FeaturedProducts() {
                     </div>
                     ))
                 ) : (
-                    products.slice(0,6).map((product, index) => (
+                    products?.map((product, index) => (
                             <ProductCard key={index} product={product} />
                         ))
                 )

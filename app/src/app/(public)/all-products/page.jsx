@@ -3,7 +3,8 @@ import { ListFilter } from 'lucide-react'
 import DrawerContent from '@/components/(public)/All_Products/DrawerContent'
 import SortButton from '@/components/(public)/All_Products/SortButton'
 import { products } from '../../../../public/product'
-import ProductCard from '@/components/(public)/Shared/ProductCard'
+import { Suspense } from 'react'
+import Products_List from '@/components/(public)/All_Products/Products_List'
 
 function page() {
   return (
@@ -60,9 +61,16 @@ function page() {
         
         <div className='mt-12'>
             <div className='grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4  gap-y-8'>
-                {products.map((product,index) => (
-                    <ProductCard key={index} product={product} />
+              <Suspense fallback = {
+                <>
+                  {[...Array(10)].map((_,idx)=> (
+                    <div key={idx} className="skeleton h-[335px]"></div>
                 ))}
+                </>
+              }>
+                <Products_List></Products_List>
+              </Suspense>
+                
             </div>
           
         </div>

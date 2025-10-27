@@ -18,6 +18,7 @@ function AddHeroPage() {
         productId: '',
         display: true
     })
+    const [isLoading, setIsLoading] = useState(false)
 
     const handleInputChange = (e) => {
         const { name, value } = e.target
@@ -50,6 +51,75 @@ function AddHeroPage() {
         } catch (error) {
             toast.error('An error occurred while fetching products')
             console.error('Error fetching products:', error)
+        }
+    }
+
+    const handlePublish = async () => {
+        // Validate required fields
+        if (!carouselImg) {
+            toast.error('Please upload a hero image')
+            return
+        }
+        
+        if (!heroData.caption.trim()) {
+            toast.error('Please enter a caption')
+            return
+        }
+        
+        if (!heroData.mainText.trim()) {
+            toast.error('Please enter a main description')
+            return
+        }
+        
+        if (!heroData.actionText.trim()) {
+            toast.error('Please enter action button text')
+            return
+        }
+        
+        if (!heroData.productId) {
+            toast.error('Please select a product to link')
+            return
+        }
+
+        setIsLoading(true)
+        
+        try {
+            const formData = new FormData()
+            formData.append('title', heroData.caption)
+            formData.append('description', heroData.mainText)
+            formData.append('actionBtnText', heroData.actionText)
+            formData.append('image', carouselImg)
+            formData.append('targetProduct', heroData.productId)
+            formData.append('display', heroData.display)
+
+            const response = await axios.post('/api/v1/admin/hero_carousel', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            })
+
+            if (response.data.success) {
+                toast.success('Hero carousel item published successfully!')
+                // Reset form
+                setHeroData({
+                    caption: '',
+                    mainText: '',
+                    actionText: '',
+                    productId: '',
+                    display: true
+                })
+                setCarouselImg(null)
+                // Reset file input
+                const fileInput = document.getElementById('productImg')
+                if (fileInput) fileInput.value = ''
+            } else {
+                toast.error(response.data.message || 'Failed to publish carousel item')
+            }
+        } catch (error) {
+            console.error('Error publishing carousel:', error)
+            toast.error('An error occurred while publishing the carousel item')
+        } finally {
+            setIsLoading(false)
         }
     }
 
@@ -207,8 +277,12 @@ function AddHeroPage() {
 
         {/* Action Buttons */}
         <div className='flex flex-col gap-3 sm:flex-row sm:gap-4 justify-end pt-4 sm:pt-6'>
-            <button className='btn btn-accent text-white w-full sm:w-auto order-1 sm:order-2'>
-                Publish Carousel Item
+            <button 
+                onClick={handlePublish}
+                disabled={isLoading}
+                className={`btn btn-accent text-white w-full sm:w-auto order-1 sm:order-2 ${isLoading ? 'loading' : ''}`}
+            >
+                {isLoading ? 'Publishing...' : 'Publish Carousel Item'}
             </button>
         </div>
     </div>
