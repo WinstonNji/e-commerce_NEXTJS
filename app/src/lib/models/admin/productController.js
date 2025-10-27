@@ -13,8 +13,8 @@ export async function createProduct(formData) {
         const description = formData.get('description')
         const price = formData.get('price')
         const discountPercentage = formData.get('discountPercentage')
-        const brand = formData.get('brand')
-        const category = formData.get('category')
+        const brand = formData.get('brandId')
+        const category = formData.get('categoryId')
         const weight = formData.get('weight') 
         const sku = formData.get('sku')
         const width = formData.get('width')
@@ -28,6 +28,8 @@ export async function createProduct(formData) {
         const inventory = formData.get('inventory')
 
         const images = Array.from(formData.getAll('image'))
+
+        console.log(category, 'categoryArrrr')
 
         // Handle thumbnail Image
         const thumbnailUrl = await getUrl(thumbnailImg, `e-commerce/products/${category}`)

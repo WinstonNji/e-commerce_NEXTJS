@@ -8,10 +8,12 @@ export async function GET(){
             WHERE display = true;
         `)
 
+        console.log(result, 'result backend')
+
         if(result.rowCount === 0){
             return NextResponse.json({
                 success: false,
-                message: "Couldn't fetch categories",
+                message: "No category Found",
                 data: result.rows
             })
         }

@@ -55,6 +55,7 @@ export async function getAllCarousel(){
         const result = await pool.query(`
                 Select * from hero_carousel
             `)
+            console.log(result, '****result from get all carousel')
         return result.rows
     }catch(error){
         console.error(error)

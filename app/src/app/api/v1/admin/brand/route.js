@@ -45,7 +45,7 @@ export async function POST(req) {
             WHERE brand_name = $1
         `, [data.brandName])
 
-        if(brands.length !== 0){
+        if(brands.length === 1){
             return NextResponse.json({
                 success: false,
                 message: "This brand is already registered. Create a new brand",
