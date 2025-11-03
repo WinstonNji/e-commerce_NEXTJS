@@ -5,6 +5,10 @@ import { Minus, Plus, Trash2 } from 'lucide-react'
 import Link from 'next/link'
 import { UserContext } from '@/context/userContext'
 import { CartContext } from '@/context/cartContext'
+import { toast } from 'react-toastify'
+import { generateToast } from '@/lib/utils/toastGenerator'
+import { useRouter } from 'next/navigation'
+
 
 function page() {
   const {userId} = useContext(UserContext)
@@ -19,8 +23,9 @@ function page() {
   const [numberOfItems, setNumberOfItems] = useState(null)
   const [sumOfItems, setSumOfItems] = useState(0)
   const [priceBefore, setPriceBefore] = useState(0)
-  const [tax, setTax] = useState(10)
+  const [tax, setTax] = useState(5)
   const [total, setTotal] = useState(0)
+  const[ placeOrderActive, setPlaceOrderActive] = useState(false)
 
   // Calculate totals whenever cartItems change
   useEffect(() => {
@@ -62,7 +67,7 @@ function page() {
   }
 
   useEffect(() => {
-    let total = (sumOfItems - (sumOfItems * tax/100)).toFixed(2) || 0
+    let total = (sumOfItems + (sumOfItems * tax/100)).toFixed(2) || 0
     setTotal(total)
 
     let priceBeforeTax = (sumOfItems * tax/100).toFixed(2)
@@ -146,6 +151,46 @@ function page() {
     if (!success) {
       updateQuantityLocal(productId, product.quantity)
     }
+  }
+
+  // Handle order item
+  const handlePlaceOrder = async () => {
+    setPlaceOrderActive(true)
+    const loadingToastId = toast.loading('Initiating Payment, Please Wait', {autoClose: false})
+    try {
+      const data = {}, items = {}
+      cartItems.forEach((item,idx) => {
+        items[item.id] = item.quantity
+      })
+      data.item = items
+      console.log(data, 'data to be sent to backend')
+
+      const response = await fetch('/api/v1/payment', {
+        method: 'POST',
+        body : JSON.stringify(data),
+        credentials : 'include'
+      })
+
+      if(!response.ok){
+        throw new Error("An error occured")
+      }
+
+      const result = await response.json()
+
+      if(!result.success){
+        generateToast(loadingToastId, result.message, 'error')
+      }
+
+      generateToast(loadingToastId, result.message, 'success')
+
+      window.open(result.flutterResponse.data.link, '_blank', 'noopener,noreferrer')
+
+    } catch (error) {
+      generateToast(loadingToastId, error, 'error')
+    }finally{
+      setPlaceOrderActive(false)
+    }
+    
   }
 
   return (
@@ -284,14 +329,14 @@ function page() {
                       <div className='flex flex-col gap-4 py-4'>
                         <div className='flex justify-between font-bold'>
                           <p>Price</p>
-                          <span>${sumOfItems.toFixed()}</span>
+                          <span>${sumOfItems.toFixed(2)}</span>
                         </div>
                         <div className='flex justify-between font-bold'>
                           <p>Cart Items</p>
                           <span>{numberOfItems} {numberOfItems > 1 ? 'items' : 'item' }</span>
                         </div>
                         <div className='flex justify-between font-bold'>
-                          <p>Shipping (5%)</p>
+                          <p>Tax (5%)</p>
                           <span>${priceBefore}</span>
                         </div>
                         <hr />
@@ -302,7 +347,7 @@ function page() {
                       </div>
     
                       <div className='mt-8 w-full p-4'>
-                        <button className='btn btn-accent text-white w-full hover:scale-105 transition-all duration-300 ease-in-out'>
+                        <button disabled={placeOrderActive} onClick={handlePlaceOrder} className='btn btn-accent text-white w-full hover:scale-105 transition-all duration-300 ease-in-out'>
                           Place Order
                         </button>
                       </div>

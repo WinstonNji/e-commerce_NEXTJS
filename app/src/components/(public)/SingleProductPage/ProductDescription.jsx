@@ -4,16 +4,19 @@ import { ShoppingCart, Wallet, Heart, Minus, Plus } from 'lucide-react'
 import { useState } from 'react'
 import { useContext } from 'react'
 import { CartContext } from '@/context/cartContext'
+import { toast } from 'react-toastify'
+import { generateToast } from '@/lib/utils/toastGenerator'
 
 function ProductDescription({product, productId}) {
     const [quantity, setQuantity] = useState(1)
     const {addToCart, cartItems, updateCartItem} = useContext(CartContext)
     const [productFoundInCart, setproductFoundInCart] = useState(cartItems.find(p => p.id === productId)) 
+    const [paymentActive, setPaymentActive] = useState(false)
 
     useEffect(() => {
         const productInCart = cartItems.find(p => p.id === productId)
         setproductFoundInCart(productInCart)
-    }, [cartItems])
+    }, [cartItems, productId])
 
     // Calculate the display quantity and price
     const displayQuantity = productFoundInCart ? productFoundInCart.quantity : quantity
@@ -62,17 +65,68 @@ function ProductDescription({product, productId}) {
         );
     }
 
+    const handlePlaceOrder = async (productId, quantity) => {
+        setPaymentActive(true)
+        const loadingToastId = toast.loading('Initiating Payment, Please Wait', {autoClose: false})
+        try {
+            const data = {}, items = {}
+
+            items[productId] = productFoundInCart ? productFoundInCart.quantity : quantity
+            data.item = items
+
+            console.log(data, 'data to be sent to backend')
+
+            const response = await fetch('/api/v1/payment', {
+                method: 'POST',
+                body : JSON.stringify(data)
+            })
+
+            if(!response.ok){
+                throw new Error("An error occured")
+            }
+
+            const result = await response.json()
+
+            if(!result.success){
+                generateToast(loadingToastId, result.message, 'error')
+            }
+
+            generateToast(loadingToastId, result.message, 'success')
+
+            window.open(result.flutterResponse.data.link, '_blank', 'noopener,noreferrer')
+
+        } catch (error) {
+            generateToast(loadingToastId, error, 'error')
+        }finally{
+            setPaymentActive(false)
+        }
+    
+    }
+
+    const handleAddToCart = async () => {
+        // product data for optimistic update
+        const productDataForCart = {
+            title: product.title,
+            price: product.price,
+            discount_percentage: product.discount_percentage,
+            brand: product.brand,
+            category: product.category
+        }
+        
+        await addToCart(product.id, quantity, productDataForCart)
+    }
+
     return (
         <div className='w-full flex flex-col gap-8'>
             <div className='flex flex-col gap-5'>
                 <h1 className='font-bold text-3xl lg:text-4xl leading-tight'>{product.title}</h1>
-                <div className='flex flex-wrap items-center gap-3 ring ring-secondary rounded-lg p-1 w-fit text-black'>
+                {/* <div className='flex flex-wrap items-center gap-3 ring ring-secondary rounded-lg p-1 w-fit text-black'>
                     {returnStars(product.rating)}
                     <span className='text-sm font-medium text-gray-600'>
                         {product.rating.toString().slice(0,3)} out of 5
                     </span>
                     <span className='text-xs text-black'>• {product?.reviews?.length || 0} reviews</span>
-                </div>
+                </div> */}
                 <div className='text-gray-500'>
                     <p>{product.description}</p>
                 </div>
@@ -133,8 +187,8 @@ function ProductDescription({product, productId}) {
                             </>
                         ) : (
                             <>
-                                <button disabled={quantity == 1}>
-                                    <Minus color='#97322D' onClick={() => setQuantity(prev => prev - 1)} />
+                                <button disabled={quantity == 1} onClick={() => setQuantity(prev => prev - 1)}>
+                                    <Minus color='#97322D' />
                                 </button>
                                 <input  
                                     className='ring w-23 text-center text-gray-600 font-bold ring-accent' 
@@ -149,7 +203,9 @@ function ProductDescription({product, productId}) {
                                     min='1'
                                     />
 
-                                <Plus color='#97322D' onClick={() => setQuantity(prev => prev + 1)} />
+                                <button onClick={() => setQuantity(prev => prev + 1)}>
+                                    <Plus color='#97322D' />
+                                </button>
                             </>
                         )}
                             
@@ -179,15 +235,16 @@ function ProductDescription({product, productId}) {
                 <button
                 disabled = {productFoundInCart} 
                 className={`flex-1 btn btn-accent text-white font-bold hover:bg-accent-hover hover:-translate-y-1 transition-all duration-300 ease-in-out py-2 ${productFoundInCart ? 'text-black' : ''}` }
-                onClick={() => addToCart(product.id, quantity)}>
+                onClick={handleAddToCart}>
                     <ShoppingCart />
                     {productFoundInCart ? 'Already In Cart' : 'Add to Cart'}
                 </button>
-                <button className='flex-1 btn btn-accent text-white font-bold hover:btn-accent-hover hover:-translate-y-1 transition-all duration-300 ease-in-out py-2'>
-                    <Wallet /> Buy Now
-                </button>
-                <button className='flex-1 btn bg-secondary text-white font-bold hover:btn-accent-hover hover:-translate-y-1 transition-all duration-300 ease-in-out py-2'>
-                    <Heart /> Add to wishlist
+                <button disabled={paymentActive === true} onClick={() => handlePlaceOrder(productId,quantity)} className='flex-1 btn btn-accent text-white font-bold hover:btn-accent-hover hover:-translate-y-1 transition-all duration-300 ease-in-out py-2'>
+                    {!paymentActive ? 
+                        (<><Wallet /> Buy Now</>) 
+                            : 
+                        (<span className="loading loading-spinner text-white"></span>) 
+                    }
                 </button>
             </div>
         </div>
