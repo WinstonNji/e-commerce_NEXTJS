@@ -25,8 +25,6 @@ export async function POST(req) {
             WHERE email = $1
         `, [email])
 
-        console.log(result, 'result from select')
-
         if(result.rowCount == 0){
             return NextResponse.json({
                 success: false,

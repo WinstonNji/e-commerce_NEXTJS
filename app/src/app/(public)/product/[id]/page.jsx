@@ -26,7 +26,7 @@ async function SingleProduct({params}) {
     }
 
     const fetchAllProducts = async () => {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/general/products`)
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/general/products`, {cache: 'force-cache'})
       if(!res.ok){
         throw Error("Couldn't fetch similar products")
       }
@@ -61,7 +61,7 @@ async function SingleProduct({params}) {
               <SimilarProducts products={similarProducts} />
             ):(
               <>
-                <p className='font-bold text-3xl text-accent mt-12'>Featured Products</p>
+                <p className='font-bold text-3xl text-accent mt-12'>Popular Products</p>
 
                 <div className='flex gap-6 w-full mt-5 overflow-x-auto py-5 px-5'>
                     {featuredProducts.map((product, idx) => (
