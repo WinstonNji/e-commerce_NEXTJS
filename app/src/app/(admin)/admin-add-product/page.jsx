@@ -5,11 +5,10 @@ import React, { useEffect } from 'react'
 import { useState } from 'react'
 import BasicInformation from '@/components/(admin)/EditProduct/BasicInformation'
 import { toast } from 'react-toastify'
-
+import { useContext } from 'react'
+import { GeneralContext } from '@/context/generalContext'
 
 function page() {
-
-
     // Initialising Images
 
     const [thumbnailImage,setThumbnailImg] = useState(false)
@@ -17,37 +16,7 @@ function page() {
     const [categories, setCategories] = useState([])
     const [allBrands, setAllBrands] = useState([])
     const [showDialog, setShowDialog] = useState(false)
-
-     const fetchCategory = async () => {
-        try {
-            const res = await fetch('/api/v1/admin/category')
-            if(!res.ok){
-                throw new Error('Failed to create new product')
-            }
-            const result = await res.json()
-            return result.data
-        } catch (error) {
-            console.error(error)
-        }
-    }
-
-    const fetchBrands = async () => {
-        try {
-            const res = await fetch('/api/v1/general/brand')
-            if(!res.ok){
-                throw new Error("An error occured, couldn't fetch brands")
-            }
-            const result = await res.json()
-            if(!result){
-                throw new Error("Couldn't get brands")
-            }
-            return result.data
-
-        } catch (error) {
-            console.error(error)
-        }
-    }
-
+    const {fetchCategory, fetchBrands} = useContext(GeneralContext)
 
     // Fetch Brands and Categories
     useEffect(() => {

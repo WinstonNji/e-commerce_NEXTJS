@@ -49,7 +49,7 @@ function BasicInformation({formData = {}, handleInputChange, categories = [], al
                 className="select select-bordered w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                 onChange={handleInputChange}
                 name='brandId'
-                value={formData.brandId}
+                value={formData.brandId || ''}
                 required
               >
                 <option value=''>Select Brand</option>
@@ -70,7 +70,7 @@ function BasicInformation({formData = {}, handleInputChange, categories = [], al
                 className="select select-bordered w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                 onChange={handleInputChange}
                 name='categoryId'
-                value={formData.categoryId}
+                value={formData.categoryId || ''}
                 required
               >
                 <option value=''>Select Category</option>
@@ -92,7 +92,7 @@ function BasicInformation({formData = {}, handleInputChange, categories = [], al
               <input 
                 type="number"
                 name="price"
-                value={formData.price}
+                value={formData.price || ''}
                 onChange={handleInputChange}
                 step="0.01"
                 min="0"
@@ -109,7 +109,7 @@ function BasicInformation({formData = {}, handleInputChange, categories = [], al
               <input 
                 type="number"
                 name="discountPercentage"
-                value={formData.discountPercentage}
+                value={formData.discountPercentage || ''}
                 onChange={handleInputChange}
                 step="1"
                 min="0"
@@ -127,7 +127,7 @@ function BasicInformation({formData = {}, handleInputChange, categories = [], al
               <input 
                 type="number"
                 name="inventory"
-                value={formData.inventory}
+                value={formData.inventory || ''}
                 onChange={handleInputChange}
                 min="0"
                 className='input input-bordered w-full focus:outline-none focus:ring-2 focus:ring-blue-500'

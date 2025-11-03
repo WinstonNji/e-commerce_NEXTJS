@@ -28,7 +28,7 @@ function ProductImages({
                 <div className='relative h-80 w-full lg:w-96 bg-gray-100 rounded-lg overflow-hidden shadow-md'>
                 <Image 
                     fill
-                    src={thumbnailImg ? URL.createObjectURL(thumbnailImg) : productThumbnail ? productThumbnail : placeHolder }
+                    src={thumbnailImg instanceof File ? URL.createObjectURL(thumbnailImg) : productThumbnail ? productThumbnail : placeHolder }
                     className='object-contain'
                     alt='Product thumbnail'
                 />
