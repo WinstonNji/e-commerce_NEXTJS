@@ -55,6 +55,8 @@ const fetchCategories = async () => {
       ? "https://e-commerce-nextjs-sage.vercel.app"
       : "http://localhost:3000";
 
+    const res = await fetch(`${baseUrl}/api/v1/general/category`)
+
     if(!res.ok){
       throw Error("Couldn't fetch product")
     }
@@ -72,6 +74,8 @@ const fetchFeaturedProducts = async () => {
     process.env.NODE_ENV === "production"
       ? "https://e-commerce-nextjs-sage.vercel.app"
       : "http://localhost:3000";
+
+    const res = await fetch(`${baseUrl}/api/v1/general/products/featured`)
 
     if(!res.ok){
       throw Error("Couldn't fetch product")
