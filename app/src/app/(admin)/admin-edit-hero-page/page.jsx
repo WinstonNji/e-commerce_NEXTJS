@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import React from 'react'
 import AddHeroPage from '@/components/(admin)/HeroImage/AddHeroPage'
 import Carousel_List from '@/components/(admin)/HeroImage/Carousel_List'
