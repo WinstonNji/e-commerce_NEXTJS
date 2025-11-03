@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import Image from "next/image";
 import HeroPageCarousel from "@/components/(public)/LandingPage/HeroPageCarousel";
 import FeaturedProducts from "@/components/(public)/LandingPage/FeaturedProducts";

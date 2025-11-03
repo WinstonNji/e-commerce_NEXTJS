@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import React from 'react'
 import ProductImages from '@/components/(public)/SingleProductPage/ProductImages'
 import ProductDescription from '@/components/(public)/SingleProductPage/ProductDescription'

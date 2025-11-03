@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import React from 'react'
 import { ListFilter } from 'lucide-react'
 import DrawerContent from '@/components/(public)/All_Products/DrawerContent'

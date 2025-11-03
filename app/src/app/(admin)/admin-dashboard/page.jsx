@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import React, { Suspense } from 'react'
 import { cookies } from 'next/headers'
 import AnalyticsOverview from '@/components/(admin)/dashboard/AnalyticsOverview'
