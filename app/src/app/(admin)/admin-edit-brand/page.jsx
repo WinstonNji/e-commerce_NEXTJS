@@ -19,7 +19,7 @@ function page() {
 
 	const fetchAllBrands = async () => {
 		try {
-			const res = await fetch('/api/v1/general/brand')
+			const res = await fetch('https://e-commerce-nextjs-sage.vercel.app/api/v1/general/brand')
 			if(!res.ok){
 				throw new Error("Couldn't fetch product")
 			}
@@ -39,7 +39,7 @@ function page() {
 	const addBrand = async (brandName) => {
 		const loadingToastId = toast.loading('Adding Brand...', {autoClose: false})
 		try {
-			const res = await fetch('/api/v1/admin/brand', {
+			const res = await fetch('https://e-commerce-nextjs-sage.vercel.app/api/v1/admin/brand', {
 				method : 'POST',
 				headers : {
 					'Content-Type' : 'application/json'

@@ -14,7 +14,7 @@ function UserContextProvider({children}) {
 
     const isUserLoggedIn = async () => {
         try {
-            const res = await fetch('/api/v1/auth/checkUserLogin', {credentials : 'include'})
+            const res = await fetch('https://e-commerce-nextjs-sage.vercel.app/api/v1/auth/checkUserLogin', {credentials : 'include'})
             const result = await res.json()
             console.log(result, '***checking user cookie')
             setLoginStatus(result.loggedIn)
@@ -33,7 +33,7 @@ function UserContextProvider({children}) {
 
     const handleLogout = async () => {
         try {
-            const res = await fetch('/api/v1/auth/logout')
+            const res = await fetch('https://e-commerce-nextjs-sage.vercel.app/api/v1/auth/logout')
             const result = await res.json()
             console.log(result, '***checking user cookie')
             setLoginStatus(result.loggedIn)
@@ -43,42 +43,6 @@ function UserContextProvider({children}) {
         }
     }
 
-    // const addToCart = async (productId, quantity) => {
-    //     try {
-    //         if(!isLoggedIn || !userId){
-    //             toast.info("Login Required for this feature")
-    //             router.push('/login')
-    //             return
-    //         }
-
-    //         const data = {
-    //             quantity,
-    //             productId
-    //         }
-
-    //         const res = await fetch('/api/v1/cart/add_to_cart', {
-    //             method : 'POST',
-    //             credentials : 'include',
-    //             body : JSON.stringify(data)
-    //         })
-
-    //         if(!res.ok){
-    //             toast.error("Couldn't add product to cart.")
-    //             return
-    //         }
-
-    //         const result = await res.json()
-
-    //         if(!result.success){
-    //             toast.error(result.message)
-    //             return
-    //         }
-
-    //     } catch (error) {
-    //         toast.error("An error occured couldn't add to cart")
-    //     }
-        
-    // }
 
 
 

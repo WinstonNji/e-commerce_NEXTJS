@@ -32,7 +32,7 @@ function CartContextProvider({children}) {
     const fetchCartItems = async () => {
         setLoading(true)
         try {
-            const res = await fetch('/api/v1/cart', {
+            const res = await fetch('https://e-commerce-nextjs-sage.vercel.app/api/v1/cart', {
                 credentials: 'include'
             })
 
@@ -102,7 +102,7 @@ function CartContextProvider({children}) {
                 productId
             }
 
-            const res = await fetch('/api/v1/cart', {
+            const res = await fetch('https://e-commerce-nextjs-sage.vercel.app/api/v1/cart', {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
@@ -163,7 +163,7 @@ function CartContextProvider({children}) {
                 productId
             }
 
-            const res = await fetch('/api/v1/cart', {
+            const res = await fetch('https://e-commerce-nextjs-sage.vercel.app/api/v1/cart', {
                 method: 'POST',
                 credentials: 'include',
                 headers: {

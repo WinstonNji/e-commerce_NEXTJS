@@ -10,7 +10,7 @@ function GeneralContextProvider({children}) {
 
 const fetchCategory_general = async () => {
     try {
-        const res = await fetch('/api/v1/general/category', {cache: 'force-cache'})
+        const res = await fetch('https://e-commerce-nextjs-sage.vercel.app/api/v1/general/category', {cache: 'force-cache'})
         if(!res.ok){
             throw new Error('Failed to create new product')
         }
@@ -23,7 +23,7 @@ const fetchCategory_general = async () => {
 
 const fetchCategory = async () => {
     try {
-        const res = await fetch('/api/v1/admin/category', {cache: 'force-cache'})
+        const res = await fetch('https://e-commerce-nextjs-sage.vercel.app/api/v1/admin/category', {cache: 'force-cache'})
         if(!res.ok){
             throw new Error('Failed to create new product')
         }
@@ -36,7 +36,7 @@ const fetchCategory = async () => {
 
 const fetchBrands = async () => {
     try {
-        const res = await fetch('/api/v1/general/brand', {cache : 'force-cache'})
+        const res = await fetch('https://e-commerce-nextjs-sage.vercel.app/api/v1/general/brand', {cache : 'force-cache'})
         if(!res.ok){
             throw new Error("An error occured, couldn't fetch brands")
         }

@@ -76,7 +76,7 @@ function ProductDescription({product, productId}) {
 
             console.log(data, 'data to be sent to backend')
 
-            const response = await fetch('/api/v1/payment', {
+            const response = await fetch('https://e-commerce-nextjs-sage.vercel.app/api/v1/payment', {
                 method: 'POST',
                 body : JSON.stringify(data)
             })

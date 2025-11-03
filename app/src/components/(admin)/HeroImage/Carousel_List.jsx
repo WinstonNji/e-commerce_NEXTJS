@@ -4,7 +4,10 @@ import CarouselCards from './CarouselCards'
 
 async function getCarouselData() {
   try {
-    const baseUrl = process.env.VERCEL_URL ?  `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'
+    const baseUrl =
+    process.env.NODE_ENV === "production"
+      ? "https://e-commerce-nextjs-sage.vercel.app"
+      : "http://localhost:3000";
     const res = await fetch(`${baseUrl}/api/v1/admin/hero_carousel`)
     
     if (!res.ok) {
