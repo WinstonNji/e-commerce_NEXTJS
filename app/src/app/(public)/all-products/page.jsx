@@ -12,7 +12,9 @@ async function page({searchParams}) {
 
   const fetchAllProduct = async () => {
       try {
-          const url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/general/products`
+          const baseUrl = process.env.VERCEL_url ?  `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'
+
+          const url = `${baseUrl}/api/v1/general/products`
         
           const res = await fetch(url, {
               cache: 'force-cache'

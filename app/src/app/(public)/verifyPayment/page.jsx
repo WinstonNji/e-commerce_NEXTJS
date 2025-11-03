@@ -17,7 +17,7 @@ export default function VerifyPaymentPage() {
         const queryString = searchParams.toString();
         console.log(queryString, "queryString");
 
-        const url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/verify_transaction?${queryString}`;
+        const url = `/api/v1/verify_transaction?${queryString}`;
         const res = await fetch(url, { cache: "no-store" });
 
         if (!res.ok) throw new Error("Verification failed");

@@ -4,7 +4,10 @@ import ProductCard from '../Shared/ProductCard'
 async function Products_List({ params }) {
     const fetchAllProduct = async () => {
         const queryString = new URLSearchParams(params).toString()
-        const url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/general/products${queryString ? `?${queryString}` : ''}`
+        
+        const baseUrl = process.env.VERCEL_url ?  `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'
+
+        const url = `${baseUrl}/api/v1/general/products${queryString ? `?${queryString}` : ''}`
         
         const res = await fetch(url, {
             cache: 'no-store'
