@@ -4,6 +4,7 @@ import { ToastContainer } from "react-toastify"
 import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
 import jwt from'jsonwebtoken'
+import GeneralContextProvider from "@/context/generalContext"
 
 export const metadata = {
   title: 'Next.js',
@@ -35,14 +36,16 @@ export default async function RootLayout({ children }) {
     <html lang="en" data-theme='mytheme'>
       <body className="bg-primary flex md:flex-row flex-col gap-8">
         {/* Sidebar with fixed width */}
-        <aside className="w-44 flex-shrink-0">
-          <SideBar />
-        </aside>
+        <GeneralContextProvider>
+          <aside className="w-44 flex-shrink-0">
+            <SideBar />
+          </aside>
         
-        <main className="flex-1 min-w-0 mx-4 ">
-          {children}
-        </main>
-        <ToastContainer autoClose={3000} />
+          <main className="flex-1 min-w-0 mx-4 ">
+            {children}
+          </main>
+          <ToastContainer autoClose={3000} />
+        </GeneralContextProvider>
       </body>
     </html>
   )
