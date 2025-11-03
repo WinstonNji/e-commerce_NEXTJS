@@ -81,7 +81,7 @@ export async function POST(req) {
         })
 
     } catch (error) {
-        console.error(error)
+        console.error(error, '****add to cart error')
         return NextResponse.json({
             success: false,
             message: "An error occured",

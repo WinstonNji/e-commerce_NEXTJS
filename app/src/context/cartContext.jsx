@@ -61,9 +61,7 @@ function CartContextProvider({children}) {
         }
     }
 
-    const addToCart = async (productId, quantity) => {
-
-
+    const addToCart = async (productId, quantity, productData = null) => {
         try {
             if(!isLoggedIn || !userId){
                 toast.info("Login Required for this feature")
@@ -71,9 +69,34 @@ function CartContextProvider({children}) {
                 setTimeout(()=> {
                     router.push('/login')
                 }, 2000)
-                return
+                return false
             }
 
+            // Optimistically add to cart UI
+            const existingItem = cartItems.find(item => item.id === productId)
+            
+            if (existingItem) {
+                // Item already exists, just update quantity optimistically
+                setCartItems(prev =>
+                    prev.map(item =>
+                        item.id === productId
+                            ? { ...item, quantity: item.quantity + quantity }
+                            : item
+                    )
+                )
+            } else if (productData) {
+                // Add new item optimistically with product data
+                const optimisticItem = {
+                    id: productId,
+                    quantity: quantity,
+                    ...productData
+                }
+                setCartItems(prev => [...prev, optimisticItem])
+            }
+
+            toast.success('Added to cart')
+
+            // Sync with backend
             const data = {
                 quantity,
                 productId
@@ -89,30 +112,49 @@ function CartContextProvider({children}) {
             })
 
             if(!res.ok){
-                toast.error("Couldn't add product to cart.")
-                return
+                toast.error("Failed to sync with server")
+                // Revert optimistic update
+                await fetchCartItems()
+                return false
             }
 
             const result = await res.json()
 
             if(!result.success){
                 toast.error(result.message)
-                return
+                // Revert optimistic update
+                await fetchCartItems()
+                return false
             }
 
-            toast.success('Added to cart')
-            // Refresh cart items after adding
+            // Sync with actual server data in background
             await fetchCartItems()
+            return true
 
         } catch (error) {
+            console.error(error)
             toast.error("An error occurred couldn't add to cart")
+            // Revert optimistic update
+            await fetchCartItems()
+            return false
         }
     }
 
     const updateCartItem = async (productId, quantity) => {
+        // Store original state for rollback
+        const originalItems = [...cartItems]
+        
+        // Optimistically update UI
+        setCartItems(prev =>
+            prev.map(item =>
+                item.id === productId ? { ...item, quantity: quantity } : item
+            )
+        )
+
         try {
             if(!isLoggedIn || !userId){
                 toast.info("Login Required for this feature")
+                setCartItems(originalItems)
                 return false
             }
 
@@ -132,6 +174,7 @@ function CartContextProvider({children}) {
 
             if(!res.ok){
                 toast.error("Couldn't update cart item.")
+                setCartItems(originalItems)
                 return false
             }
 
@@ -139,6 +182,7 @@ function CartContextProvider({children}) {
 
             if(!result.success){
                 toast.error(result.message)
+                setCartItems(originalItems)
                 return false
             }
 
@@ -146,6 +190,7 @@ function CartContextProvider({children}) {
 
         } catch (error) {
             toast.error("An error occurred couldn't update cart")
+            setCartItems(originalItems)
             return false
         }
     }
