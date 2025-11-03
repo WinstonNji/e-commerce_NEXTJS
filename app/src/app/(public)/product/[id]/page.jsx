@@ -12,7 +12,8 @@ async function SingleProduct({params}) {
 
     const fetchSingleProduct = async (productId) => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/general/products/${productId}`, {cache : 'no-store'})
+        const baseUrl = process.env.VERCEL_url ?  `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'
+        const res = await fetch(`${baseUrl}/api/v1/general/products/${productId}`, {cache : 'no-store'})
 
         if(!res.ok){
           throw Error("Couldn't fetch product")
@@ -26,7 +27,8 @@ async function SingleProduct({params}) {
     }
 
     const fetchAllProducts = async () => {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/general/products`, {cache: 'force-cache'})
+      const baseUrl = process.env.VERCEL_url ?  `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'
+      const res = await fetch(`${baseUrl}/api/v1/general/products`, {cache: 'force-cache'})
       if(!res.ok){
         throw Error("Couldn't fetch similar products")
       }

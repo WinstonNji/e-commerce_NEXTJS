@@ -6,8 +6,11 @@ import Categories from "@/components/(public)/LandingPage/Categories";
 import ClientTestimonial from "@/components/(public)/LandingPage/ClientTestimonial";
 
 const fetchCarousel = async () => {
+
+  const baseUrl = process.env.VERCEL_url ?  `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'
+
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/general/hero_carousel`, {cache : 'no-store'})
+    const res = await fetch(`${baseUrl}/api/v1/general/hero_carousel`, {cache : 'no-store'})
 
     if(!res.ok){
       throw Error("Couldn't fetch product")
@@ -22,8 +25,9 @@ const fetchCarousel = async () => {
 }
 
 const fetchTrustSignal = async () => {
+  const baseUrl = process.env.VERCEL_url ?  `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/general/trust_signals`)
+    const res = await fetch(`${baseUrl}/api/v1/general/trust_signals`)
     if(!res.ok){
       throw Error("Couldn't fetch product")
     }
@@ -38,7 +42,8 @@ const fetchTrustSignal = async () => {
 
 const fetchCategories = async () => {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/general/category`, {cache : 'no-store'})
+    const baseUrl = process.env.VERCEL_url ?  `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'
+    const res = await fetch(`${baseUrl}/api/v1/general/category`, {cache : 'no-store'})
 
     if(!res.ok){
       throw Error("Couldn't fetch product")
@@ -53,7 +58,8 @@ const fetchCategories = async () => {
 
 const fetchFeaturedProducts = async () => {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/general/products/featured`, {cache : 'no-store'})
+    const baseUrl = process.env.VERCEL_url ?  `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'
+    const res = await fetch(`${baseUrl}/api/v1/general/products/featured`, {cache : 'no-store'})
 
     if(!res.ok){
       throw Error("Couldn't fetch product")

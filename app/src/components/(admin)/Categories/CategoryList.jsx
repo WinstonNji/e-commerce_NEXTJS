@@ -1,7 +1,8 @@
 import CategoryCard from '@/components/Shared/Category/CategoryCard'
 
 export default async function CategoryList() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/admin/category`)
+  const baseUrl = process.env.VERCEL_url ?  `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'
+  const res = await fetch(`${baseUrl}/api/v1/admin/category`)
   if (!res.ok) throw new Error('Failed to fetch categories')
   const data = await res.json()
   const categories = data.data || []

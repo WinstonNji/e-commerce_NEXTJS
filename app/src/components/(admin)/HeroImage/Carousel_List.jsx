@@ -3,7 +3,8 @@ import CarouselCards from './CarouselCards'
 
 async function getCarouselData() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/admin/hero_carousel`, {credentials : 'include'})
+    const baseUrl = process.env.VERCEL_url ?  `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'
+    const res = await fetch(`${baseUrl}/api/v1/admin/hero_carousel`, {credentials : 'include'})
     
     if (!res.ok) {
       throw new Error('Failed to fetch carousel data')

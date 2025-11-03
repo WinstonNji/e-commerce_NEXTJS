@@ -5,7 +5,7 @@ import { GeneralContext } from '@/context/generalContext'
 
 
 function DrawerContent({products}) {
-    const {fetchCategory, fetchBrands} = useContext(GeneralContext)
+    const {fetchCategory_general, fetchBrands} = useContext(GeneralContext)
     const [categories,setCategories] = useState([])
     const [brands,setBrands] = useState([])
     const [prices,setPrices] = useState([])
@@ -18,7 +18,7 @@ function DrawerContent({products}) {
 
     const init = async () => {
       const [fetchedCategories, fetchedBrands] = await Promise.all([
-        fetchCategory(),
+        fetchCategory_general(),
         fetchBrands()
       ])
 

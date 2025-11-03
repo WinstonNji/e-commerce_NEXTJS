@@ -8,6 +8,19 @@ export const GeneralContext = createContext()
 
 function GeneralContextProvider({children}) {
 
+const fetchCategory_general = async () => {
+    try {
+        const res = await fetch('/api/v1/general/category', {cache: 'force-cache'})
+        if(!res.ok){
+            throw new Error('Failed to create new product')
+        }
+        const result = await res.json()
+        return result.data
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 const fetchCategory = async () => {
     try {
         const res = await fetch('/api/v1/admin/category', {cache: 'force-cache'})
@@ -39,7 +52,7 @@ const fetchBrands = async () => {
 }
 
   return (
-    <GeneralContext.Provider value={{fetchCategory,fetchBrands}}>
+    <GeneralContext.Provider value={{fetchCategory,fetchBrands,fetchCategory_general}}>
         {children}
     </GeneralContext.Provider>
   )
