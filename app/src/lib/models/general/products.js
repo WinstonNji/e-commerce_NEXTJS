@@ -1,8 +1,14 @@
 import pool from "../../db";
 
-export async function getAllProducts_general() {
-    try {
-        const query = `
+export async function getAllProducts_general(searchParams) {
+
+    const category = searchParams.get("category")
+    const brands = searchParams.get("brand")
+    const min = searchParams.get("min")
+    const max = searchParams.get("max")
+    const brandList = brands ? brands.split(",") : []
+
+        let query = `
             SELECT 
                 p.id,
                 p.title,
@@ -31,12 +37,37 @@ export async function getAllProducts_general() {
             ON p.category = c.id
             JOIN brand b
             ON p.brand = b.id
-            WHERE is_deleted = false AND p.display = true
-            GROUP BY p.id,c.title,b.brand_name
+            WHERE 
+                p.is_deleted = false
+                AND 
+                p.display = true
         `
 
-        const result = await pool.query(query)
-        return result.rows
+        const values = []
+        let paramIndex = 1
+
+        if(category){
+            query += ` AND c.title = $${paramIndex++}`
+            values.push(category)
+        }
+
+        if(brandList.length > 0){
+            query += ` AND b.brand_name = ANY($${paramIndex++})`
+            values.push(brandList)
+        }
+
+        if(min && max){
+            query += ` AND p.price BETWEEN $${paramIndex++} AND $${paramIndex++}`;
+            values.push(Number(min), Number(max));
+        }
+
+        query += `
+            GROUP BY p.id, c.title, b.brand_name
+        `
+        try {
+            const result = await pool.query(query, values)
+            console.log(result.rows, '*****result of the return from filter')
+            return result.rows
     } catch (error) {
         console.error(error)
         throw error

@@ -77,9 +77,11 @@ function ProductCard({product, singleTrue = false, admin = false}) {
                   </span>
                   {returnStars(product.rating) > 3.5 ? returnStars(product.rating) : '' }
                 </p>
-                <div className='flex w-full justify-between items-center lg:mt-0'>
+                <div className='flex w-full justify-between items-center lg:mt-0 py-1'>
                   <p className='font-bold text-lg text-accent '>${product.price}</p>
-                  <button className='hidden md:block btn  btn-outline rounded-full group-hover:text-white group-hover:bg-accent font-semibold'>Buy now</button>
+                  <button 
+                    className='hidden md:block btn  btn-outline rounded-full group-hover:text-white group-hover:bg-accent font-semibold'>Buy now
+                  </button>
                 </div>
               </div>
               

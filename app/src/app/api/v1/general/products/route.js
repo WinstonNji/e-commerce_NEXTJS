@@ -2,8 +2,10 @@ import { getAllProducts_general } from '@/lib/models/general/products'
 import { NextResponse } from 'next/server'
 
 
-export async function GET() {
-    const products = await getAllProducts_general()
+export async function GET(req) {
+    const searchParams = req.nextUrl.searchParams
+    console.log(searchParams, '**********searchParams')
+    const products = await getAllProducts_general(searchParams)
 
     try {
         if(products.length == 0){

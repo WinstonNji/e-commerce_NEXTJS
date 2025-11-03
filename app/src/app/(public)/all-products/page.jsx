@@ -2,15 +2,39 @@ import React from 'react'
 import { ListFilter } from 'lucide-react'
 import DrawerContent from '@/components/(public)/All_Products/DrawerContent'
 import SortButton from '@/components/(public)/All_Products/SortButton'
-import { products } from '../../../../public/product'
 import { Suspense } from 'react'
 import Products_List from '@/components/(public)/All_Products/Products_List'
 
-function page() {
+
+async function page({searchParams}) {
+
+  const params = await searchParams
+
+  const fetchAllProduct = async () => {
+      try {
+          const url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/general/products`
+        
+          const res = await fetch(url, {
+              cache: 'force-cache'
+          })
+
+          if(!res.ok){
+              throw new Error("An error occurred")
+          }
+
+          const result = await res.json()
+          return result.data
+      } catch (error) {
+          console.error(error)
+      }
+  }
+
+  const products = await fetchAllProduct()
+
   return (
     <div>
         <div>
-            <p className='text-3xl text-accent font-bold mt-3'>All Our Products</p>
+            <p className='text-3xl text-accent font-bold mt-8'>All Our Products</p>
             <p className='text-gray-500'>Here you can find all our curated products</p>
         </div>
         
@@ -60,22 +84,19 @@ function page() {
 
         
         <div className='mt-12'>
-            <div className='grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4  gap-y-8'>
-              <Suspense fallback = {
-                <>
-                  {[...Array(10)].map((_,idx)=> (
-                    <div key={idx} className="skeleton h-[335px]"></div>
-                ))}
-                </>
-              }>
-                <Products_List></Products_List>
-              </Suspense>
-                
-            </div>
-          
+            <Suspense fallback={
+                <div className='grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4  gap-y-8 '>
+                    {[...Array(10)].map((_, idx) => (
+                        <div key={idx} className="skeleton h-[335px]"></div>
+                    ))}
+                </div>
+            }>
+                <Products_List params={params} />
+            </Suspense>          
         </div>
     </div>
   )
 }
 
 export default page
+                  
