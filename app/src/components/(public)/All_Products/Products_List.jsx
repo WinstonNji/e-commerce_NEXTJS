@@ -5,7 +5,7 @@ async function Products_List({ params }) {
     const fetchAllProduct = async () => {
         const queryString = new URLSearchParams(params).toString()
         
-        const baseUrl = process.env.VERCEL_url ?  `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'
+        const baseUrl = process.env.VERCEL_URL ?  `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'
 
         const url = `${baseUrl}/api/v1/general/products${queryString ? `?${queryString}` : ''}`
         

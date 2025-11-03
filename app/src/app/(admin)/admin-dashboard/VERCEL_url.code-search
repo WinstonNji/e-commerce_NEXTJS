@@ -1,0 +1,64 @@
+# Query: VERCEL_url
+# ContextLines: 1
+
+26 results - 8 files
+
+app\src\app\(admin)\admin-dashboard\page.jsx:
+  13  
+  14:   const baseUrl = process.env.VERCEL_URL ?  `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'  
+  15  
+
+  34  
+  35:   const baseUrl = process.env.VERCEL_URL ?  `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'
+  36  
+
+app\src\app\(public)\page.jsx:
+  11  
+  12:   const baseUrl = process.env.VERCEL_URL ?  `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'
+  13  
+
+  29  const fetchTrustSignal = async () => {
+  30:   const baseUrl = process.env.VERCEL_URL ?  `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'
+  31    try {
+
+  46    try {
+  47:     const baseUrl = process.env.VERCEL_URL ?  `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'
+  48      const res = await fetch(`${baseUrl}/api/v1/general/category`, {cache : 'no-store'})
+
+  62    try {
+  63:     const baseUrl = process.env.VERCEL_URL ?  `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'
+  64      const res = await fetch(`${baseUrl}/api/v1/general/products/featured`, {cache : 'no-store'})
+
+app\src\app\(public)\all-products\page.jsx:
+  16        try {
+  17:           const baseUrl = process.env.VERCEL_URL ?  `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'
+  18  
+
+app\src\app\(public)\product\[id]\page.jsx:
+  16        try {
+  17:         const baseUrl = process.env.VERCEL_URL ?  `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'
+  18          const res = await fetch(`${baseUrl}/api/v1/general/products/${productId}`, {cache : 'no-store'})
+
+  31      const fetchAllProducts = async () => {
+  32:       const baseUrl = process.env.VERCEL_URL ?  `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'
+  33        const res = await fetch(`${baseUrl}/api/v1/general/products`, {cache: 'force-cache'})
+
+app\src\components\(admin)\Categories\CategoryList.jsx:
+  3  export default async function CategoryList() {
+  4:   const baseUrl = process.env.VERCEL_URL ?  `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'
+  5    const res = await fetch(`${baseUrl}/api/v1/admin/category`)
+
+app\src\components\(admin)\HeroImage\Carousel_List.jsx:
+  6    try {
+  7:     const baseUrl = process.env.VERCEL_URL ?  `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'
+  8      const res = await fetch(`${baseUrl}/api/v1/admin/hero_carousel`)
+
+app\src\components\(admin)\TrustSignals\TrustSignalList.jsx:
+   9      try {
+  10:         const baseUrl = process.env.VERCEL_URL ?  `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'
+  11          const res = await fetch(`${baseUrl}/api/v1/admin/trust_signals`)
+
+app\src\components\(public)\All_Products\Products_List.jsx:
+  7          
+  8:         const baseUrl = process.env.VERCEL_URL ?  `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'
+  9  

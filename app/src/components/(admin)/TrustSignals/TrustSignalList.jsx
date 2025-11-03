@@ -7,7 +7,7 @@ export default async function TrustSignalList() {
     let trustSignals = []
 
     try {
-        const baseUrl = process.env.VERCEL_url ?  `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'
+        const baseUrl = process.env.VERCEL_URL ?  `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'
         const res = await fetch(`${baseUrl}/api/v1/admin/trust_signals`)
 
         if(!res.ok){

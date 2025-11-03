@@ -9,7 +9,7 @@ import ClientTestimonial from "@/components/(public)/LandingPage/ClientTestimoni
 
 const fetchCarousel = async () => {
 
-  const baseUrl = process.env.VERCEL_url ?  `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'
+  const baseUrl = process.env.VERCEL_URL ?  `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'
 
   try {
     const res = await fetch(`${baseUrl}/api/v1/general/hero_carousel`, {cache : 'no-store'})
@@ -27,7 +27,7 @@ const fetchCarousel = async () => {
 }
 
 const fetchTrustSignal = async () => {
-  const baseUrl = process.env.VERCEL_url ?  `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'
+  const baseUrl = process.env.VERCEL_URL ?  `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'
   try {
     const res = await fetch(`${baseUrl}/api/v1/general/trust_signals`)
     if(!res.ok){
@@ -44,7 +44,7 @@ const fetchTrustSignal = async () => {
 
 const fetchCategories = async () => {
   try {
-    const baseUrl = process.env.VERCEL_url ?  `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'
+    const baseUrl = process.env.VERCEL_URL ?  `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'
     const res = await fetch(`${baseUrl}/api/v1/general/category`, {cache : 'no-store'})
 
     if(!res.ok){
@@ -60,7 +60,7 @@ const fetchCategories = async () => {
 
 const fetchFeaturedProducts = async () => {
   try {
-    const baseUrl = process.env.VERCEL_url ?  `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'
+    const baseUrl = process.env.VERCEL_URL ?  `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'
     const res = await fetch(`${baseUrl}/api/v1/general/products/featured`, {cache : 'no-store'})
 
     if(!res.ok){

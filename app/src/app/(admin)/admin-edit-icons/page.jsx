@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic"
 import React from 'react'
 import IconCard from '@/components/Shared/Icons/IconCard'
 import { assets } from '../../../../public/assets'
