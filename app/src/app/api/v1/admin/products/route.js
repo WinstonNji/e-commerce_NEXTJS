@@ -13,7 +13,7 @@ export async function POST(req){
             return NextResponse.json({
                 isDemo: true,
                 success: false,
-                message: "Functionaliity not allowed for demo_admin account",
+                message: "Functionaliity not allowed for demo admin account",
             })
         }
 
