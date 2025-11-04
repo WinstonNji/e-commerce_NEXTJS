@@ -12,6 +12,7 @@ import { getBaseUrl } from '@/lib/utils/getBaseUrl'
 
 
 function page() {
+  const router = useRouter()
   const {userId} = useContext(UserContext)
   const {
     cartItems,
@@ -185,9 +186,7 @@ function page() {
       }
 
       generateToast(loadingToastId, result.message, 'success')
-
-      window.open(result.flutterResponse.data.link, '_blank', 'noopener,noreferrer')
-
+      router.push(result.flutterResponse.data.link)
     } catch (error) {
       generateToast(loadingToastId, error, 'error')
     }finally{

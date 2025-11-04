@@ -112,7 +112,7 @@ function ProductDescription({product, productId}) {
 
             generateToast(loadingToastId, result.message, 'success')
 
-            window.open(result.flutterResponse.data.link, '_blank', 'noopener,noreferrer')
+            router.push(result.flutterResponse.data.link)
 
         } catch (error) {
             generateToast(loadingToastId, error, 'error')
