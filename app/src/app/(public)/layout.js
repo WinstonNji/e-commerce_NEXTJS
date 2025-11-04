@@ -19,7 +19,7 @@ const geistMono = Geist_Mono({
 
 export const metadata = {
   title: "ShopQuick - E-commerce",
-  description: "Find your favourite products at affordable prices",
+  description: "Find your favourite products at affordable prices | Winston Portfolio Project",
 };
 
 export default function RootLayout({ children, url }) {
