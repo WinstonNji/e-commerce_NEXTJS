@@ -127,7 +127,7 @@ function CategoryCard({info}) {
 
   return (
     <div className='relative '>
-        <Link href={`/all-products?category=${category.categoryName}`}>
+        <Link href={`${isAdmin ? '' : '/all-products?category=${category.categoryName}'}`}>
             <div 
                 className='group ring rounded-2xl overflow-hidden hover:-translate-y-1.5 transition-all duration-300 ease-in-out shadow-md hover:shadow-xl cursor-pointer'
             >
