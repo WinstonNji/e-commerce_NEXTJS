@@ -7,10 +7,18 @@ import { CartContext } from '@/context/cartContext'
 import { toast } from 'react-toastify'
 import { generateToast } from '@/lib/utils/toastGenerator'
 import { getBaseUrl } from '@/lib/utils/getBaseUrl'
+import { UserContext } from '@/context/userContext'
+import { useRouter } from 'next/navigation'
 
 function ProductDescription({product, productId}) {
-    const [quantity, setQuantity] = useState(1)
+    // CONTEXTS
     const {addToCart, cartItems, updateCartItem} = useContext(CartContext)
+    const {isLoggedIn} = useContext(UserContext)
+    // Router
+        const router = useRouter()
+    // 
+    const [quantity, setQuantity] = useState(1)
+
     const [productFoundInCart, setproductFoundInCart] = useState(cartItems.find(p => p.id === productId)) 
     const [paymentActive, setPaymentActive] = useState(false)
     const [addingToCart, setAddingToCart] = useState(false)
@@ -68,6 +76,13 @@ function ProductDescription({product, productId}) {
     }
 
     const handlePlaceOrder = async (productId, quantity) => {
+        if(!isLoggedIn){
+            toast.info('Login is required for this feature. Redirecting you to login')
+            setTimeout(() => {
+                router.push('/login')
+            }, 1500)
+            return
+        }
         setPaymentActive(true)
         const loadingToastId = toast.loading('Initiating Payment, Please Wait', {autoClose: false})
         try {

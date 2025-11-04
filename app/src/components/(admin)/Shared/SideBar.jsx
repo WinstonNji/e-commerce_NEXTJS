@@ -1,11 +1,12 @@
 "use client"
-import React, { useState } from 'react'
-import { ChartColumnStacked, LayoutGrid, Pencil, Search, Tag } from 'lucide-react'
+import React, { useState, useContext } from 'react'
+import { ChartColumnStacked, LayoutGrid, Pencil, Search, Tag, LogOut } from 'lucide-react'
 import { Home } from 'lucide-react'
 import { Plus } from 'lucide-react'
 import { Wallpaper } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { UserContext } from '@/context/userContext'
 
 function SideBar() {
     return (
@@ -23,6 +24,18 @@ function SideBar() {
 
 const SideDeskTop = () => {
     const pathname = usePathname()
+    const { handleLogout } = useContext(UserContext)
+    const [loggingOut, setLoggingOut] = useState(false)
+
+    const onLogout = async () => {
+        if (loggingOut) return
+        setLoggingOut(true)
+        try {
+            await handleLogout()
+        } finally {
+            setLoggingOut(false)
+        }
+    }
 
     const navItems = [
         { path: '/admin-dashboard', icon: Home, label: 'Dashboard' },
@@ -50,6 +63,10 @@ const SideDeskTop = () => {
                     </div>
                 </Link>
             ))}
+            <button onClick={onLogout} disabled={loggingOut} className={`flex gap-2 items-center justify-center cursor-pointer hover:bg-base-300 p-4 w-full ${loggingOut ? 'opacity-60 cursor-not-allowed' : ''}`}>
+                <LogOut />
+                Logout
+            </button>
         </div>
     )
     
@@ -57,6 +74,18 @@ const SideDeskTop = () => {
 
 const SideMobile = () => {
     const pathname = usePathname()
+    const { handleLogout } = useContext(UserContext)
+    const [loggingOut, setLoggingOut] = useState(false)
+
+    const onLogout = async () => {
+        if (loggingOut) return
+        setLoggingOut(true)
+        try {
+            await handleLogout()
+        } finally {
+            setLoggingOut(false)
+        }
+    }
 
     const navItems = [
         { path: '/admin-dashboard', icon: Home, label: 'Dashboard' },
@@ -85,6 +114,10 @@ const SideMobile = () => {
                     </div>
                 </Link>
             ))}
+            <button onClick={onLogout} disabled={loggingOut} className={`flex gap-2 flex-col items-center justify-center cursor-pointer hover:bg-base-300 p-1 hover:rounded-sm min-w-24 max-w-2 min-h-28 text-center ${loggingOut ? 'opacity-60 cursor-not-allowed' : ''}`}>
+                <LogOut />
+                Logout
+            </button>
         </div>
     )
     

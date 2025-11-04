@@ -5,6 +5,7 @@ import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
 import jwt from'jsonwebtoken'
 import GeneralContextProvider from "@/context/generalContext"
+import UserContextProvider from "@/context/userContext"
 
 export const metadata = {
   title: 'ShopQuick - Admin',
@@ -37,14 +38,16 @@ export default async function RootLayout({ children }) {
       <body className="bg-primary flex md:flex-row flex-col gap-8">
         {/* Sidebar with fixed width */}
         <GeneralContextProvider>
-          <aside className="w-44 flex-shrink-0">
-            <SideBar />
-          </aside>
-        
-          <main className="flex-1 min-w-0 mx-4 ">
-            {children}
-          </main>
-          <ToastContainer autoClose={3000} />
+          <UserContextProvider>
+            <aside className="w-44 flex-shrink-0">
+              <SideBar />
+            </aside>
+          
+            <main className="flex-1 min-w-0 mx-4 ">
+              {children}
+            </main>
+            <ToastContainer autoClose={3000} />
+          </UserContextProvider>
         </GeneralContextProvider>
       </body>
     </html>
