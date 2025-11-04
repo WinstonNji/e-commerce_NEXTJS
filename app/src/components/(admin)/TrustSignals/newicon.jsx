@@ -3,7 +3,6 @@ import React, { useState } from 'react'
 import IconPreviewCard from './IconPreviewCard'
 import axios from 'axios'
 import { toast } from 'react-toastify'
-
 import {
     ShoppingCart,
     ShoppingBag,
@@ -38,10 +37,13 @@ import {
 } from "lucide-react"
 import { generateToast } from '@/lib/utils/toastGenerator'
 import { useRouter } from 'next/navigation'
+import { getBaseUrl } from '@/lib/utils/getBaseUrl'
 
 function Newicon() {
 
     const router = useRouter()
+    const baseUrl = getBaseUrl()
+    const [processing, setProcessing] = useState(false)
 
     const availableIcons = [
         ShoppingCart,
@@ -109,8 +111,9 @@ function Newicon() {
         }
 
         try{
+            setProcessing(true)
             const loadingToastId = toast.loading('Uploading Icon, please wait...', {autoClose: false})
-            const result = await axios.post('/api/v1/admin/trust_signals', info)
+            const result = await axios.post(`${baseUrl}/api/v1/admin/trust_signals`, info)
             console.log(result, '***icon upload result')
             if(!result.data.success){
                 generateToast(loadingToastId, result.data.message, 'error')
@@ -121,6 +124,8 @@ function Newicon() {
             handleCancel()
         }catch(error){
             generateToast(loadingToastId, 'An error occured',  'error')
+        }finally{
+            setProcessing(false)
         }
         
     }
@@ -198,6 +203,7 @@ function Newicon() {
             {/* Action Buttons */}
             <div className='max-w-2xl mx-auto flex gap-4 mt-8'>
                 <button 
+                    disabled={processing}
                     className='btn btn-success flex-1'
                     onClick={handleUpload}
                 >

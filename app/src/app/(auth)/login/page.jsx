@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 import { useContext } from 'react';
 import { UserContext } from '@/context/userContext';
+import { getBaseUrl } from '@/lib/utils/getBaseUrl';
 
 export default function AuthUI() {
   const {setLoginStatus} = useContext(UserContext)
@@ -19,6 +20,7 @@ export default function AuthUI() {
     password: '',
     confirmPassword: ''
   });
+  const baseUrl = getBaseUrl()
 
   const handleInputChange = (e) => {
     setFormData({
@@ -30,7 +32,7 @@ export default function AuthUI() {
   const loginUser = async () => {
     setLoading(true);
     try {
-      const result = await axios.post('/api/v1/auth/login-user', formData);
+      const result = await axios.post(`${baseUrl}/api/v1/auth/login-user`, formData);
 
       console.log(result);
 
@@ -52,7 +54,7 @@ export default function AuthUI() {
   const registerUser = async () => {
     setLoading(true);
     try {
-      const result = await axios.post('/api/v1/auth/register', formData);
+      const result = await axios.post(`${baseUrl}/api/v1/auth/register`, formData);
       console.log(result);
       
       if(!result.data.success){

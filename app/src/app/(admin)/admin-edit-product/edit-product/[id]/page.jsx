@@ -10,6 +10,7 @@ import axios from 'axios'
 import { generateToast } from '@/lib/utils/toastGenerator'
 import { useContext } from 'react'
 import { GeneralContext } from '@/context/generalContext'
+import { getBaseUrl } from '@/lib/utils/getBaseUrl'
 
 function Page() {
     const {id} = useParams()
@@ -17,7 +18,8 @@ function Page() {
     const [categories, setCategories] = useState([])
     const [loading, setLoading] = useState(false)
     const {fetchCategory,fetchBrands} = useContext(GeneralContext)
-
+    const baseUrl = getBaseUrl()
+    const [processing, setProcessing] = useState(false)
 
     const init = async() => {
       setLoading(true)
@@ -36,7 +38,7 @@ function Page() {
     const [product,setProduct] = useState(null)
     const fetchSingleProduct = async(productId) => {
       try {
-        const result = await axios.get(`/api/v1/admin/products/${productId}`)
+        const result = await axios.get(`${baseUrl}/api/v1/admin/products/${productId}`)
         if(!result.data.success){
           toast.error('An error occured')
         }
@@ -240,8 +242,9 @@ function Page() {
       // return
 
       const loadingToastId = toast.loading('Updating Task, please wait...')
+      setProcessing(true)
       try {
-        const result = await axios.patch(`/api/v1/admin/products/${id}`, productData)
+        const result = await axios.patch(`${baseUrl}/api/v1/admin/products/${id}`, productData)
         if(!result.data.success){
           generateToast(loadingToastId, result.data.message, 'error')
           return 
@@ -253,6 +256,8 @@ function Page() {
         setImages([])
       } catch (error) {
         generateToast(loadingToastId, 'An error occured', 'error')
+      } finally {
+        setProcessing(false)
       }
     }
 
@@ -358,7 +363,7 @@ function Page() {
               {/* Action Buttons */}
               <div className='flex justify-end gap-4'>
                 <button type="button" className='btn btn-outline hover:btn-error' onClick={handleCancel} >Cancel</button>
-                <button type="submit" className='btn text-white btn-success' >Save Changes</button>
+                <button disabled={processing} type="submit" className='btn text-white btn-success' >Save Changes</button>
               </div>
             </form>
           )}

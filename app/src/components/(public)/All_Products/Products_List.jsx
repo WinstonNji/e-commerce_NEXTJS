@@ -1,14 +1,12 @@
 import React from 'react'
 import ProductCard from '../Shared/ProductCard'
+import { getBaseUrl } from '@/lib/utils/getBaseUrl'
 
 async function Products_List({ params }) {
     const fetchAllProduct = async () => {
         const queryString = new URLSearchParams(params).toString()
         
-        const baseUrl =
-          process.env.NODE_ENV === "production"
-            ? "https://e-commerce-nextjs-sage.vercel.app"
-            : "http://localhost:3000";
+        const baseUrl = getBaseUrl()
 
         const url = `${baseUrl}/api/v1/general/products${queryString ? `?${queryString}` : ''}`
         

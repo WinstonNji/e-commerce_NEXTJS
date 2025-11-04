@@ -3,39 +3,60 @@ export const dynamic = "force-dynamic";
 import React from 'react'
 import ProductImages from '@/components/(public)/SingleProductPage/ProductImages'
 import ProductDescription from '@/components/(public)/SingleProductPage/ProductDescription'
-import ReviewSection from '@/components/(public)/SingleProductPage/ReviewSection'
 import ProductDetails from '@/components/(public)/SingleProductPage/ProductDetails'
 import SimilarProducts from '@/components/(public)/SingleProductPage/SimilarProducts'
 import ProductCard from '@/components/(public)/Shared/ProductCard'
+import { getBaseUrl } from '@/lib/utils/getBaseUrl';
 
+
+
+export async function generateMetadata({params}) {
+  const product = await fetchSingleProduct(params.id)
+
+  if(!product){
+    return {
+      title : 'ShopQuick | Product Not Found'
+    };
+  }
+
+  return {
+    title: `${product.title} | ShopQuick`,
+    description: product.description,
+    openGraph: {
+      title: product.title,
+      description: product.description,
+      images: [
+        {
+          url: product.thumbnail_img,
+          width: 800,
+          height: 600,
+        },
+      ],
+    },
+  }
+}
+
+const fetchSingleProduct = async (productId) => {
+  try {
+    const baseUrl = getBaseUrl()
+    const res = await fetch(`${baseUrl}/api/v1/general/products/${productId}`, {cache : 'no-store'})
+
+    if(!res.ok){
+      throw Error("Couldn't fetch product")
+    }
+    const result = await res.json()
+    console.log(result.data, '****single Product')
+    return result.data
+  } catch (error) {
+    console.error(error)
+  } 
+}
 
 async function SingleProduct({params}) {
-    const {id} =  params
-
-    const fetchSingleProduct = async (productId) => {
-      try {
-        const baseUrl =
-        process.env.NODE_ENV === "production"
-          ? "https://e-commerce-nextjs-sage.vercel.app"
-          : "http://localhost:3000";
-        const res = await fetch(`${baseUrl}/api/v1/general/products/${productId}`, {cache : 'no-store'})
-
-        if(!res.ok){
-          throw Error("Couldn't fetch product")
-        }
-        const result = await res.json()
-        console.log(result.data, '****single Product')
-        return result.data
-      } catch (error) {
-        console.error(error)
-      } 
-    }
+    const {id} = params
 
     const fetchAllProducts = async () => {
-      const baseUrl =
-      process.env.NODE_ENV === "production"
-        ? "https://e-commerce-nextjs-sage.vercel.app"
-        : "http://localhost:3000";
+      const baseUrl = getBaseUrl()
       const res = await fetch(`${baseUrl}/api/v1/general/products`, {cache: 'force-cache'})
       if(!res.ok){
         throw Error("Couldn't fetch similar products")

@@ -13,6 +13,17 @@ import { CartContext } from '@/context/cartContext'
 function NavBar() {
     const {isLoggedIn, handleLogout} = useContext(UserContext)
     const {cartLength} = useContext(CartContext)
+    const [loggingOut, setLoggingOut] = useState(false)
+
+    const onLogout = async () => {
+        if (loggingOut) return
+        setLoggingOut(true)
+        try {
+            await handleLogout()
+        } finally {
+            setLoggingOut(false)
+        }
+    }
 
     console.log(cartLength, '**cartLength')
     
@@ -20,11 +31,13 @@ function NavBar() {
         <div className='text-black font-semibold '>
             <MobileNavBar 
                 isLoggedIn = {isLoggedIn}
-                handleLogout = {handleLogout}
+                onLogout = {onLogout}
+                loggingOut = {loggingOut}
                 />
             <DesktopNavBar 
                 isLoggedIn = {isLoggedIn}
-                handleLogout = {handleLogout}
+                onLogout = {onLogout}
+                loggingOut = {loggingOut}
                 cartLength = {cartLength}
             />
             <hr />
@@ -33,7 +46,7 @@ function NavBar() {
     )
 }
 
-function MobileNavBar ({isLoggedIn, handleLogout}){
+function MobileNavBar ({isLoggedIn, onLogout, loggingOut}){
 
     const [menuIsOpen, setMenu] = useState(false)
     const pathname = usePathname()
@@ -78,7 +91,7 @@ function MobileNavBar ({isLoggedIn, handleLogout}){
                         </li>                
                         <li className='hover:underline underline-offset-4 decoration-accent'>
                             {isLoggedIn ? (
-                                <button onClick={handleLogout} className='flex items-center justify-center gap-2 hover:border-b-2 border-accent transition-all duration-100 ease-in-out btn text-black btn-outline hover:btn-accent hover:text-white'>
+                                <button disabled={loggingOut} onClick={onLogout} className='flex items-center justify-center gap-2 hover:border-b-2 border-accent transition-all duration-100 ease-in-out btn text-black btn-outline hover:btn-accent hover:text-white'>
                                     <span>Logout</span>
                                     <LogOut />
                                 </button>
@@ -99,7 +112,7 @@ function MobileNavBar ({isLoggedIn, handleLogout}){
     )
 }
 
-function DesktopNavBar({isLoggedIn, handleLogout, cartLength}) {
+function DesktopNavBar({isLoggedIn, onLogout, loggingOut, cartLength}) {
     console.log(isLoggedIn, 'isLoggedIn')
     const pathname = usePathname()
     return (
@@ -136,7 +149,7 @@ function DesktopNavBar({isLoggedIn, handleLogout, cartLength}) {
                 </li>
                 <li>
                     {isLoggedIn ? (
-                        <button onClick={handleLogout} className='flex items-center justify-center gap-2 hover:border-b-2 border-accent transition-all duration-100 ease-in-out btn text-black btn-outline hover:btn-accent hover:text-white'>
+                        <button disabled={loggingOut} onClick={onLogout} className='flex items-center justify-center gap-2 hover:border-b-2 border-accent transition-all duration-100 ease-in-out btn text-black btn-outline hover:btn-accent hover:text-white'>
                             <span>Logout</span>
                             <LogOut />
                         </button>

@@ -3,15 +3,20 @@ import React, { useState, useEffect, useRef } from 'react'
 import { Pencil, Trash2, Plus, Check, X } from 'lucide-react'
 import { toast } from 'react-toastify'
 import { generateToast } from '@/lib/utils/toastGenerator'
+import { getBaseUrl } from '@/lib/utils/getBaseUrl'
 
 function page() {
 	
 	// Local state to manage list and inline edit/add
+
+	const baseUrl = getBaseUrl()
+
 	const [brands, setBrands] = useState([])
 	const [nameInput, setNameInput] = useState("")
 	const [editingIndex, setEditingIndex] = useState(null)
 	const inputRef = useRef(null)
-	const [isLoading, setIsLoading] = useState(true)
+    const [isLoading, setIsLoading] = useState(true)
+    const [processing, setProcessing] = useState(false)
 
 	useEffect(() => {
 		fetchAllBrands()
@@ -19,7 +24,7 @@ function page() {
 
 	const fetchAllBrands = async () => {
 		try {
-			const res = await fetch('https://e-commerce-nextjs-sage.vercel.app/api/v1/general/brand')
+			const res = await fetch(`${baseUrl}/api/v1/general/brand`)
 			if(!res.ok){
 				throw new Error("Couldn't fetch product")
 			}
@@ -36,10 +41,11 @@ function page() {
 		}
 	}
 
-	const addBrand = async (brandName) => {
+    const addBrand = async (brandName) => {
 		const loadingToastId = toast.loading('Adding Brand...', {autoClose: false})
-		try {
-			const res = await fetch('https://e-commerce-nextjs-sage.vercel.app/api/v1/admin/brand', {
+        setProcessing(true)
+        try {
+			const res = await fetch(`${baseUrl}/api/v1/admin/brand`, {
 				method : 'POST',
 				headers : {
 					'Content-Type' : 'application/json'
@@ -59,15 +65,18 @@ function page() {
 			}
 			generateToast(loadingToastId, result.message, 'success')
 			fetchAllBrands()
-		} catch (error) {
+        } catch (error) {
 			generateToast(loadingToastId, error, 'error')
+        } finally {
+            setProcessing(false)
 		}
 	}
 
-	const editBrand = async (updatedBrandName, brandId) => {
+    const editBrand = async (updatedBrandName, brandId) => {
 		const loadingToastId = toast.loading('Updating Brand...', {autoClose: false})
-		try {
-			const res = await fetch(`/api/v1/admin/brand/${brandId}`, {
+        setProcessing(true)
+        try {
+			const res = await fetch(`${baseUrl}/api/v1/admin/brand/${brandId}`, {
 				method: 'PATCH',
 				headers: {
 					'Content-Type': 'application/json'
@@ -86,8 +95,10 @@ function page() {
 			}
 			generateToast(loadingToastId, result.message, 'success')
 			fetchAllBrands()
-		} catch (error) {
+        } catch (error) {
 			generateToast(loadingToastId, error.message, 'error')
+        } finally {
+            setProcessing(false)
 		}
 	}
 
@@ -118,9 +129,10 @@ function page() {
 		setNameInput(brands[index].brand_name)
 	}
 
-	const handleDelete = async (brandId) => {
+    const handleDelete = async (brandId) => {
 		const loading = toast.loading('Deleting Brand...', {autoClose: false})
-		try {
+        setProcessing(true)
+        try {
 			const res = await fetch(`/api/v1/admin/brand/${brandId}`, {
 				method : 'DELETE'
 			})
@@ -145,13 +157,15 @@ function page() {
 				autoClose:3000
 			})
 			fetchAllBrands()
-		} catch (error) {
+        } catch (error) {
 			toast.update(loading, {
 				render : error,
 				type : 'error',
 				isLoading : false,
 				autoClose:3000
 			})
+        } finally {
+            setProcessing(false)
 		}
 	}
 
@@ -185,18 +199,19 @@ function page() {
 								</div>
 								<div className='flex gap-2'>
 									{(nameInput || editingIndex !== null) && (
-										<button
+                                    <button
 											type="button"
-											className='btn btn-outline flex items-center gap-2'
+                                        className='btn btn-outline flex items-center gap-2'
 											onClick={handleCancel}
 										>
 											<X size={18} />
 											<span className='hidden sm:inline'>Cancel</span>
 										</button>
 									)}
-									<button
+                                <button
 										type="submit"
-										className='btn text-white btn-success flex items-center gap-2'
+                                    disabled={processing}
+                                    className='btn text-white btn-success flex items-center gap-2'
 									>
 										{editingIndex === null ? <Plus size={18} /> : <Check size={18} />}
 										<span>{editingIndex === null ? 'Add Brand' : 'Save'}</span>
@@ -234,17 +249,18 @@ function page() {
 											{brand?.brand_name}
 										</div>
 										<div className='flex gap-2'>
-											<button
+                                            <button
 												type='button'
-												className='btn btn-ghost btn-sm text-white btn-success'
+                                                className='btn btn-ghost btn-sm text-white btn-success'
 												onClick={() => handleEdit(idx)}
 												title="Edit brand"
 											>
 												<Pencil size={18} />
 											</button>
-											<button
+                                            <button
 												type='button'
-												className='btn btn-ghost btn-sm text-base-content hover:text-white btn-error'
+                                                disabled={processing}
+                                                className='btn btn-ghost btn-sm text-base-content hover:text-white btn-error'
 												onClick={() => handleDelete(brand.id)}
 												title="Delete brand"
 											>

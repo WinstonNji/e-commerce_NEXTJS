@@ -1,16 +1,14 @@
 import React from 'react'
 import IconCard from '@/components/Shared/Icons/IconCard'
 import { assets } from '../../../../public/assets'
+import { getBaseUrl } from '@/lib/utils/getBaseUrl'
 
 export default async function TrustSignalList() {
 
     let trustSignals = []
 
     try {
-        const baseUrl =
-          process.env.NODE_ENV === "production"
-            ? "https://e-commerce-nextjs-sage.vercel.app"
-            : "http://localhost:3000";
+        const baseUrl = getBaseUrl()
         const res = await fetch(`${baseUrl}/api/v1/admin/trust_signals`)
 
         if(!res.ok){

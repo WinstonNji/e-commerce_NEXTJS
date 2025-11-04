@@ -1,13 +1,11 @@
 import React from 'react'
 import CarouselCards from './CarouselCards'
+import { getBaseUrl } from '@/lib/utils/getBaseUrl'
 
 
 async function getCarouselData() {
   try {
-    const baseUrl =
-    process.env.NODE_ENV === "production"
-      ? "https://e-commerce-nextjs-sage.vercel.app"
-      : "http://localhost:3000";
+    const baseUrl = getBaseUrl()
     const res = await fetch(`${baseUrl}/api/v1/admin/hero_carousel`)
     
     if (!res.ok) {

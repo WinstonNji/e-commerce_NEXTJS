@@ -6,12 +6,14 @@ import { useContext } from 'react'
 import { CartContext } from '@/context/cartContext'
 import { toast } from 'react-toastify'
 import { generateToast } from '@/lib/utils/toastGenerator'
+import { getBaseUrl } from '@/lib/utils/getBaseUrl'
 
 function ProductDescription({product, productId}) {
     const [quantity, setQuantity] = useState(1)
     const {addToCart, cartItems, updateCartItem} = useContext(CartContext)
     const [productFoundInCart, setproductFoundInCart] = useState(cartItems.find(p => p.id === productId)) 
     const [paymentActive, setPaymentActive] = useState(false)
+    const [addingToCart, setAddingToCart] = useState(false)
 
     useEffect(() => {
         const productInCart = cartItems.find(p => p.id === productId)
@@ -76,7 +78,9 @@ function ProductDescription({product, productId}) {
 
             console.log(data, 'data to be sent to backend')
 
-            const response = await fetch('https://e-commerce-nextjs-sage.vercel.app/api/v1/payment', {
+            const baseUrl = getBaseUrl()
+
+            const response = await fetch(`${baseUrl}/api/v1/payment`, {
                 method: 'POST',
                 body : JSON.stringify(data)
             })
@@ -113,7 +117,13 @@ function ProductDescription({product, productId}) {
             category: product.category
         }
         
-        await addToCart(product.id, quantity, productDataForCart)
+        if (addingToCart) return
+        setAddingToCart(true)
+        try {
+            await addToCart(product.id, quantity, productDataForCart)
+        } finally {
+            setAddingToCart(false)
+        }
     }
 
     return (
@@ -233,11 +243,11 @@ function ProductDescription({product, productId}) {
             <div className='flex flex-col gap-3 w-full -mt-8 xl:flex-row'>
                 
                 <button
-                disabled = {productFoundInCart} 
+                disabled = {productFoundInCart || addingToCart} 
                 className={`flex-1 btn btn-accent text-white font-bold hover:bg-accent-hover hover:-translate-y-1 transition-all duration-300 ease-in-out py-2 ${productFoundInCart ? 'text-black' : ''}` }
                 onClick={handleAddToCart}>
                     <ShoppingCart />
-                    {productFoundInCart ? 'Already In Cart' : 'Add to Cart'}
+                    {productFoundInCart ? 'Already In Cart' : (addingToCart ? 'Adding...' : 'Add to Cart')}
                 </button>
                 <button disabled={paymentActive === true} onClick={() => handlePlaceOrder(productId,quantity)} className='flex-1 btn btn-accent text-white font-bold hover:btn-accent-hover hover:-translate-y-1 transition-all duration-300 ease-in-out py-2'>
                     {!paymentActive ? 

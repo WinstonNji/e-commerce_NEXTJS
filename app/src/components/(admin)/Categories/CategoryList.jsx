@@ -1,11 +1,11 @@
 import CategoryCard from '@/components/Shared/Category/CategoryCard'
+import { getBaseUrl } from '@/lib/utils/getBaseUrl'
 
 export default async function CategoryList() {
-  const baseUrl =
-  process.env.NODE_ENV === "production"
-    ? "https://e-commerce-nextjs-sage.vercel.app"
-    : "http://localhost:3000";
-  const res = await fetch(`${baseUrl}/api/v1/admin/category`)
+  const baseUrl = getBaseUrl()
+  const res = await fetch(`${baseUrl}/api/v1/admin/category`, {
+    cache : 'no-store'
+  })
   if (!res.ok) throw new Error('Failed to fetch categories')
   const data = await res.json()
   const categories = data.data || []

@@ -4,19 +4,20 @@ import { Suspense, useEffect, useContext } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { toast } from "react-toastify"
 import { CartContext } from "@/context/cartContext"
+import { getBaseUrl } from "@/lib/utils/getBaseUrl"
 
 function VerifyPaymentContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { fetchCartItems } = useContext(CartContext)
-
+  const baseUrl = getBaseUrl()
   useEffect(() => {
     const verifyTransaction = async () => {
       try {
         const queryString = searchParams.toString()
         console.log(queryString, "queryString")
 
-        const url = `/api/v1/verify_transaction?${queryString}`
+        const url = `${baseUrl}/api/v1/verify_transaction?${queryString}`
         const res = await fetch(url, { cache: "no-store" })
 
         if (!res.ok) throw new Error("Verification failed")

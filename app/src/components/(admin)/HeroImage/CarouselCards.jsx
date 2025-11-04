@@ -8,17 +8,19 @@ import { toast } from 'react-toastify'
 import axios from 'axios'
 import { generateToast } from '@/lib/utils/toastGenerator'
 import { useRouter } from 'next/navigation'
+import { getBaseUrl } from '@/lib/utils/getBaseUrl'
 
 function CarouselCards({carouselInfo}) {
 
     const router = useRouter()
+    const baseUrl = getBaseUrl()
 
     // Fetching products for select
     const [products, setProducts] = useState([])
 
     const fetchCarousels = async () => {
         try {
-            const result = await axios.get('/api/v1/admin/products')
+            const result = await axios.get(`${baseUrl}/api/v1/admin/products`)
 
             if (!result.data.success){
                 toast.error('Failed to fetch products')
@@ -61,6 +63,7 @@ function CarouselCards({carouselInfo}) {
 
     const [imageFile, setImage] = useState(null)
     const [isEdit, setIsEdit] = useState(false)
+    const [processing, setProcessing] = useState(false)
 
     const handleInput = (e) => {
         const { name, value } = e.target
@@ -108,8 +111,9 @@ function CarouselCards({carouselInfo}) {
         formData.append('display', heroDetail.display)
 
         const loadingToastId = toast.loading('Updating Carousel, please wait...', {autoClose: false})
+        setProcessing(true)
         try {
-            const result = await axios.patch(`/api/v1/admin/hero_carousel/${carouselId}`, formData)
+            const result = await axios.patch(`${baseUrl}/api/v1/admin/hero_carousel/${carouselId}`, formData)
 
             console.log(result)
 
@@ -125,6 +129,8 @@ function CarouselCards({carouselInfo}) {
             console.error(error)
             generateToast(loadingToastId, 'An error occured', 'error')
             handleCancel()
+        } finally {
+            setProcessing(false)
         }
 
         for(const [key,value] of formData.entries()){
@@ -136,8 +142,9 @@ function CarouselCards({carouselInfo}) {
 
     const handleDelete = async (carouselId) => {
         const loadingToastId = toast.loading('Deleting Toast, please wait...')
+        setProcessing(true)
         try {
-            const result = await axios.delete(`/api/v1/admin/hero_carousel/${carouselId}`)
+            const result = await axios.delete(`${baseUrl}/api/v1/admin/hero_carousel/${carouselId}`)
             if(!result.data.success){
                 generateToast(loadingToastId, result.data.message, 'error')
                 return
@@ -146,6 +153,8 @@ function CarouselCards({carouselInfo}) {
             router.refresh()
         } catch (error) {
             generateToast(loadingToastId, 'Ooops. An error occured', 'error')
+        } finally {
+            setProcessing(false)
         }
       
     }
@@ -283,9 +292,9 @@ function CarouselCards({carouselInfo}) {
 
                 {isEdit && 
                     <div className='flex flex-col sm:flex-row justify-between mt-5 gap-2 sm:gap-4'>
-                        <button onClick={() => handleSave(heroDetail.id)} className='btn btn-sm sm:btn-md flex-1 btn-success text-xs sm:text-sm'>Save</button>
+                        <button disabled={processing} onClick={() => handleSave(heroDetail.id)} className='btn btn-sm sm:btn-md flex-1 btn-success text-xs sm:text-sm'>Save</button>
                         <button onClick={handleCancel} className='btn btn-sm sm:btn-md flex-1 btn-outline text-black hover:text-white hover:btn-error border text-xs sm:text-sm'>Cancel</button>
-                        <button onClick={()=> handleDelete(heroDetail.id)} className='btn btn-sm sm:btn-md flex-1 text-white btn-error text-xs sm:text-sm'><Trash className='w-4 h-4'/></button>
+                        <button disabled={processing} onClick={()=> handleDelete(heroDetail.id)} className='btn btn-sm sm:btn-md flex-1 text-white btn-error text-xs sm:text-sm'><Trash className='w-4 h-4'/></button>
                     </div>
                 }
             </div>

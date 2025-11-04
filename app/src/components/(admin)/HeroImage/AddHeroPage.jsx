@@ -6,6 +6,7 @@ import { Plus, Info } from 'lucide-react'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import { generateToast } from '@/lib/utils/toastGenerator'
+import { getBaseUrl } from '@/lib/utils/getBaseUrl'
 
 function AddHeroPage() {
 
@@ -37,9 +38,11 @@ function AddHeroPage() {
         }
     }
 
+    const baseUrl = getBaseUrl()
+
     const fetchProducts = async () => {
         try {
-            const result = await axios.get('/api/v1/admin/products')
+            const result = await axios.get(`${baseUrl}/api/v1/admin/products`)
 
             if (!result.data.success){
                 toast.error('Failed to fetch products')
@@ -92,7 +95,7 @@ function AddHeroPage() {
             formData.append('targetProduct', heroData.productId)
             formData.append('display', heroData.display)
 
-            const response = await axios.post('/api/v1/admin/hero_carousel', formData, {
+            const response = await axios.post(`${baseUrl}/api/v1/admin/hero_carousel`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },

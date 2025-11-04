@@ -6,13 +6,11 @@ import FeaturedProducts from "@/components/(public)/LandingPage/FeaturedProducts
 import TrustSignals from "@/components/(public)/LandingPage/TrustSignals";
 import Categories from "@/components/(public)/LandingPage/Categories";
 import ClientTestimonial from "@/components/(public)/LandingPage/ClientTestimonial";
+import { getBaseUrl } from "@/lib/utils/getBaseUrl";
 
 const fetchCarousel = async () => {
 
-  const baseUrl =
-  process.env.NODE_ENV === "production"
-    ? "https://e-commerce-nextjs-sage.vercel.app"
-    : "http://localhost:3000";
+  const baseUrl = getBaseUrl()
 
   try {
     const res = await fetch(`${baseUrl}/api/v1/general/hero_carousel`, {cache : 'no-store'})
@@ -30,10 +28,7 @@ const fetchCarousel = async () => {
 }
 
 const fetchTrustSignal = async () => {
-  const baseUrl =
-  process.env.NODE_ENV === "production"
-    ? "https://e-commerce-nextjs-sage.vercel.app"
-    : "http://localhost:3000";
+  const baseUrl = getBaseUrl()
   try {
     const res = await fetch(`${baseUrl}/api/v1/general/trust_signals`)
     if(!res.ok){
@@ -50,10 +45,7 @@ const fetchTrustSignal = async () => {
 
 const fetchCategories = async () => {
   try {
-    const baseUrl =
-    process.env.NODE_ENV === "production"
-      ? "https://e-commerce-nextjs-sage.vercel.app"
-      : "http://localhost:3000";
+    const baseUrl = getBaseUrl()
 
     const res = await fetch(`${baseUrl}/api/v1/general/category`)
 
@@ -70,10 +62,7 @@ const fetchCategories = async () => {
 
 const fetchFeaturedProducts = async () => {
   try {
-    const baseUrl =
-    process.env.NODE_ENV === "production"
-      ? "https://e-commerce-nextjs-sage.vercel.app"
-      : "http://localhost:3000";
+    const baseUrl = getBaseUrl()
 
     const res = await fetch(`${baseUrl}/api/v1/general/products/featured`)
 

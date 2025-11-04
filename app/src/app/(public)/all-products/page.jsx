@@ -6,6 +6,7 @@ import DrawerContent from '@/components/(public)/All_Products/DrawerContent'
 import SortButton from '@/components/(public)/All_Products/SortButton'
 import { Suspense } from 'react'
 import Products_List from '@/components/(public)/All_Products/Products_List'
+import { getBaseUrl } from '@/lib/utils/getBaseUrl';
 
 
 async function page({searchParams}) {
@@ -14,10 +15,7 @@ async function page({searchParams}) {
 
   const fetchAllProduct = async () => {
       try {
-          const baseUrl =
-          process.env.NODE_ENV === "production"
-            ? "https://e-commerce-nextjs-sage.vercel.app"
-            : "http://localhost:3000";
+          const baseUrl = getBaseUrl()
 
           const url = `${baseUrl}/api/v1/general/products`
         

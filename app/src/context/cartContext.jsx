@@ -3,6 +3,7 @@ import React, { useState, useContext, useEffect, createContext } from 'react'
 import { toast } from 'react-toastify'
 import { UserContext } from './userContext'
 import { useRouter } from 'next/navigation'
+import { getBaseUrl } from '@/lib/utils/getBaseUrl'
 
 export const CartContext = createContext()
 
@@ -13,6 +14,8 @@ function CartContextProvider({children}) {
     const [loading, setLoading] = useState(false)
     
     const router = useRouter()
+
+    const baseUrl = getBaseUrl()
 
     // Fetch cart items when user logs in
     useEffect(() => {
@@ -32,7 +35,7 @@ function CartContextProvider({children}) {
     const fetchCartItems = async () => {
         setLoading(true)
         try {
-            const res = await fetch('https://e-commerce-nextjs-sage.vercel.app/api/v1/cart', {
+            const res = await fetch(`${baseUrl}/api/v1/cart`, {
                 credentials: 'include'
             })
 
@@ -102,7 +105,7 @@ function CartContextProvider({children}) {
                 productId
             }
 
-            const res = await fetch('https://e-commerce-nextjs-sage.vercel.app/api/v1/cart', {
+            const res = await fetch(`${baseUrl}/api/v1/cart`, {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
@@ -163,7 +166,7 @@ function CartContextProvider({children}) {
                 productId
             }
 
-            const res = await fetch('https://e-commerce-nextjs-sage.vercel.app/api/v1/cart', {
+            const res = await fetch(`${baseUrl}/api/v1/cart`, {
                 method: 'POST',
                 credentials: 'include',
                 headers: {

@@ -9,15 +9,17 @@ import { generateToast } from '@/lib/utils/toastGenerator'
 import { toast } from 'react-toastify'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { getBaseUrl } from '@/lib/utils/getBaseUrl'
 
 
 
 function CategoryCard({info}) {
     const router = useRouter()
-
+    const baseUrl = getBaseUrl()
     const isAdmin = usePathname().includes('admin')
     const [isEdit, setIsEdit] = useState(false)
     const [previewUrl, setPreviewUrl] = useState(null)
+    const [processing, setProcessing] = useState(false)
 
     const [originalCategory] = useState({
         id : info.id,
@@ -37,8 +39,9 @@ function CategoryCard({info}) {
 
     const updateCategory = async (categoryId, formData) => {
         const loadingId = toast.loading('Updating Category, Please Wait.... ', {autoClose: false})
+        setProcessing(true)
         try {
-            const result = await axios.patch(`/api/v1/admin/category/${categoryId}`, formData)
+            const result = await axios.patch(`${baseUrl}/api/v1/admin/category/${categoryId}`, formData)
             console.log(result, '***update category result')
             if(!result.data.success){
                 generateToast(loadingId,result.data.message,'error')
@@ -51,6 +54,8 @@ function CategoryCard({info}) {
             console.error(error)
             generateToast(loadingId,'An error occured', 'error')
             return
+        } finally {
+            setProcessing(false)
         }
     }
     
@@ -79,8 +84,9 @@ function CategoryCard({info}) {
 
     const handleDelete = async (categoryId) => {
         const loadingToastId = toast.loading('Deleting Category Please Wait..', {autoclose: 3000})
+        setProcessing(true)
         try {
-            const result = await axios.delete(`/api/v1/admin/category/${categoryId}`)
+            const result = await axios.delete(`${baseUrl}/api/v1/admin/category/${categoryId}`)
 
             if(!result.data.success){
                 generateToast(loadingToastId, result.data.message,'error')
@@ -88,10 +94,13 @@ function CategoryCard({info}) {
             }
 
             generateToast(loadingToastId, result.data.message,'success')
+            window.location.reload()
             router.refresh()
         } catch (error) {
             console.error(error)
             generateToast(loadingToastId, 'An error occured','error')
+        } finally {
+            setProcessing(false)
         }
     
     }
@@ -127,7 +136,7 @@ function CategoryCard({info}) {
 
   return (
     <div className='relative '>
-        <Link href={`${isAdmin ? '' : '/all-products?category=${category.categoryName}'}`}>
+        <Link href={`${isAdmin ? '' : `/all-products?category=${category.categoryName}`}`}>
             <div 
                 className='group ring rounded-2xl overflow-hidden hover:-translate-y-1.5 transition-all duration-300 ease-in-out shadow-md hover:shadow-xl cursor-pointer'
             >
@@ -137,7 +146,12 @@ function CategoryCard({info}) {
                 
                 <div className='relative aspect-[4/3] bg-base-200 overflow-hidden'>
                     {isEdit && (
-                        <label htmlFor={`imgUpload-${category.id}`} className='group'>
+                        <label 
+
+                            htmlFor={`imgUpload-${category.id}`} 
+                            className='group'
+                            onClick={(e) => e.stopPropagation()}
+                        >
                             <div className={`flex flex-col absolute top-0 right-0 left-0 bottom-0 bg-secondary/50 z-10  items-center justify-center hover:bg-black/60 cursor-pointer transition-colors duration-150 ease-in-out `}>
                                 <Upload size={50}  className='text-white group-hover:text-white' />
                                 <p className='font-bold text-sm text-white '>Edit Category</p>
@@ -221,6 +235,7 @@ function CategoryCard({info}) {
                     <div className={`flex flex-wrap lg:flex-row items-center gap-4 mt-4 ${!isEdit ? 'hidden' : 'block'}`}>
                         <button 
                             className='btn btn-success w-full'
+                            disabled={processing}
                             onClick={() => handleSave(category.id)}
                         >Update</button>
                         <button 
@@ -229,6 +244,7 @@ function CategoryCard({info}) {
                         >Cancel</button>
                         <button 
                             className='btn btn-error w-full'
+                            disabled={processing}
                             onClick={() => handleDelete(category.id)}
                         >
                             <Trash/>

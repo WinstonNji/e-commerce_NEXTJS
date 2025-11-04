@@ -8,6 +8,7 @@ import { CartContext } from '@/context/cartContext'
 import { toast } from 'react-toastify'
 import { generateToast } from '@/lib/utils/toastGenerator'
 import { useRouter } from 'next/navigation'
+import { getBaseUrl } from '@/lib/utils/getBaseUrl'
 
 
 function page() {
@@ -165,7 +166,9 @@ function page() {
       data.item = items
       console.log(data, 'data to be sent to backend')
 
-      const response = await fetch('https://e-commerce-nextjs-sage.vercel.app/api/v1/payment', {
+      const baseUrl = getBaseUrl()
+
+      const response = await fetch(`${baseUrl}/api/v1/payment`, {
         method: 'POST',
         body : JSON.stringify(data),
         credentials : 'include'

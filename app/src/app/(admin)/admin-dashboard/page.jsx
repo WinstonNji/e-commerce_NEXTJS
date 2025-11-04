@@ -6,15 +6,13 @@ import AnalyticsOverview from '@/components/(admin)/dashboard/AnalyticsOverview'
 import OrdersList from '@/components/(admin)/dashboard/OrdersList'
 import AnalyticsSkeleton from '@/components/(admin)/dashboard/AnalyticsSkeleton'
 import OrdersSkeleton from '@/components/(admin)/dashboard/OrdersSkeleton'
+import { getBaseUrl } from '@/lib/utils/getBaseUrl';
 
 async function fetchOrderSummary() {
   const cookieStore = await cookies()
   const cookieHeader = cookieStore.toString()
 
-  const baseUrl =
-  process.env.NODE_ENV === "production"
-    ? "https://e-commerce-nextjs-sage.vercel.app"
-    : "http://localhost:3000";  
+  const baseUrl = getBaseUrl()  
 
   const res = await fetch(`${baseUrl}/api/v1/admin/dashboard/orders_summary`, {
     headers: {
@@ -35,10 +33,7 @@ async function fetchAnalytics() {
   const cookieStore = await cookies()
   const cookieHeader = cookieStore.toString()
 
-  const baseUrl =
-  process.env.NODE_ENV === "production"
-    ? "https://e-commerce-nextjs-sage.vercel.app"
-    : "http://localhost:3000";
+  const baseUrl = getBaseUrl()
 
   const res = await fetch(`${baseUrl}/api/v1/admin/dashboard/analytics`, {
     headers: {

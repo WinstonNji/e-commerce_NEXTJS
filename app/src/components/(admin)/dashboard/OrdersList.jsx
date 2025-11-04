@@ -46,8 +46,8 @@ function OrdersList({ orders }) {
                   order.payment_status === 'paid' 
                     ? 'bg-green-600 text-white' 
                     : order.payment_status === 'pending'
-                    ? 'bg-orange text-white'
-                    : 'bg-red text-white'
+                    ? 'bg-orange-500 text-white'
+                    : 'bg-red-500 text-white'
                 }`}>
                   {order.payment_status.toUpperCase()}
                 </span>

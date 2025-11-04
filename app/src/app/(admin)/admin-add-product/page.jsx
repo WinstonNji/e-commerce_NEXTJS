@@ -16,6 +16,7 @@ function page() {
     const [categories, setCategories] = useState([])
     const [allBrands, setAllBrands] = useState([])
     const [showDialog, setShowDialog] = useState(false)
+    const [processing, setProcessing] = useState(false)
     const {fetchCategory, fetchBrands} = useContext(GeneralContext)
 
     // Fetch Brands and Categories
@@ -173,6 +174,7 @@ function page() {
         }     
 
         const loading = toast.loading('Creating Product...', {autoClose:false})
+        setProcessing(true)
         try {
             const response = await fetch('api/v1/admin/products', {
                 method : 'POST',
@@ -208,6 +210,7 @@ function page() {
             setProductInfo(originalProductData)
             setThumbnailImg(false)
             setImages([false])
+            setProcessing(false)
         }
     }
     
@@ -288,7 +291,7 @@ function page() {
                   {/* Action Buttons */}
                 <div className='flex justify-end gap-4'>
                     <button type='reset' className='btn btn-outline hover:btn-error' onClick={handleCancel} >Cancel</button>
-                    <button type="submit" className='btn text-white btn-success'>Create Product</button>
+                    <button disabled={processing} type="submit" className='btn text-white btn-success'>Create Product</button>
                 </div>
             </form>
         </div>

@@ -9,10 +9,45 @@ import axios from 'axios'
 import { generateToast } from '@/lib/utils/toastGenerator'
 import { toast } from 'react-toastify'
 import { useRouter } from 'next/navigation'
+import { getBaseUrl } from '@/lib/utils/getBaseUrl'
+const ICON_MAP = {
+  ShoppingCart: LucideIcons.ShoppingCart,
+  ShoppingBag: LucideIcons.ShoppingBag,
+  CreditCard: LucideIcons.CreditCard,
+  User: LucideIcons.User,
+  Users: LucideIcons.Users,
+  ShieldCheck: LucideIcons.ShieldCheck,
+  Lock: LucideIcons.Lock,
+  BadgeCheck: LucideIcons.BadgeCheck,
+  Truck: LucideIcons.Truck,
+  Package: LucideIcons.Package,
+  MapPin: LucideIcons.MapPin,
+  Headset: LucideIcons.Headset,
+  MessageCircle: LucideIcons.MessageCircle,
+  Mail: LucideIcons.Mail,
+  Phone: LucideIcons.Phone,
+  Tag: LucideIcons.Tag,
+  Star: LucideIcons.Star,
+  Gift: LucideIcons.Gift,
+  Search: LucideIcons.Search,
+  Heart: LucideIcons.Heart,
+  DollarSign: LucideIcons.DollarSign,
+  Percent: LucideIcons.Percent,
+  Clock: LucideIcons.Clock,
+  Calendar: LucideIcons.Calendar,
+  CheckCircle: LucideIcons.CheckCircle,
+  XCircle: LucideIcons.XCircle,
+  Bell: LucideIcons.Bell,
+  Info: LucideIcons.Info,
+  AlertCircle: LucideIcons.AlertCircle,
+  Settings: LucideIcons.Settings,
+}
 
 function IconCard({info, isAddIcon}) {
 
     const router = useRouter()
+    const baseUrl = getBaseUrl()
+    const [processing,setProcessing] = useState(false)
 
     const [isEdit, setEdit] = useState(false)
     const [imageUrl,setImageUrl] = useState(null)
@@ -55,8 +90,9 @@ function IconCard({info, isAddIcon}) {
 
 
         try {
+            setProcessing(true)
             const loadingToastId = toast.loading('Saving changes, please wait...', {autoClose: false})
-            const result = await axios.patch(`/api/v1/admin/trust_signals/${trustSignalId}`, formData)
+            const result = await axios.patch(`${baseUrl}/api/v1/admin/trust_signals/${trustSignalId}`, formData)
 
             console.log(result)
 
@@ -70,6 +106,8 @@ function IconCard({info, isAddIcon}) {
             console.error(error)
             generateToast(loadingToastId, 'An error occured', 'error')
             handleCancel()
+        }finally{
+            setProcessing(false)
         }
     }
 
@@ -95,8 +133,9 @@ function IconCard({info, isAddIcon}) {
 
     const handleDelete = async (trustSignalId) => {
         try {
+            setProcessing(true)
             const loadingToastId = toast.loading('Deleting icon, please wait...', {autoClose: false})
-            const result = await axios.delete(`/api/v1/admin/trust_signals/${trustSignalId}`)
+            const result = await axios.delete(`${baseUrl}/api/v1/admin/trust_signals/${trustSignalId}`)
             if(!result.data.success){
                 generateToast(loadingToastId, result.data.message, 'error')
                 return
@@ -106,11 +145,14 @@ function IconCard({info, isAddIcon}) {
         } catch (error) {
             console.error(error)
             generateToast(loadingToastId, 'An error occured', 'error')
+        }finally{
+            setProcessing(false)
         }
        
     }    
 
-    const IconComponent = LucideIcons[iconData?.trust_signal_icon]
+    const IconComponent = ICON_MAP[iconData?.trust_signal_icon] || LucideIcons.ShoppingCart
+
 
   return (
     <div 
@@ -205,12 +247,19 @@ function IconCard({info, isAddIcon}) {
         {/* Action Buttons */}
         {isEdit && 
             <div className='mt-4 flex gap-2 flex-wrap'>
-                <button onClick={() => handleSave(iconData.id)} className='text-xs text-white btn btn-sm bg-success flex-1'>Save</button>
-                <button onClick={handleCancel} className='text-xs text-black btn btn-sm btn-outline hover:bg-error hover:text-white flex-1'>Cancel</button>
+                <button 
+                    disabled={processing}
+                    onClick={() => handleSave(iconData.id)} 
+                    className='text-xs text-white btn btn-sm bg-success flex-1'>Save</button>
+                <button 
+                    disabled={processing}
+                    onClick={handleCancel} className='text-xs text-black btn btn-sm btn-outline hover:bg-error hover:text-white flex-1'>Cancel</button>
                 <label htmlFor="uploadIcon" className={`text-xs btn btn-sm bg-info flex-1 ${imageUrl ? '' : 'hidden'}`}>
                     Change Icon
                 </label>
-                <button onClick={()=> handleDelete(iconData.id)} className='btn btn-sm text-white btn-error'>
+                <button 
+                    disabled={processing}
+                    onClick={()=> handleDelete(iconData.id)} className='btn btn-sm text-white btn-error'>
                     <Trash className='w-4 h-4'/>
                 </button>
             </div>

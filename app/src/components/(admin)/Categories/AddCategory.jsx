@@ -6,12 +6,15 @@ import { displayNoImageModal } from '@/lib/utils/noImageModal'
 import { toast } from 'react-toastify'
 import { generateToast } from '@/lib/utils/toastGenerator'
 import { useRouter } from 'next/navigation'
+import { getBaseUrl } from '@/lib/utils/getBaseUrl'
 
 function AddCategory() {
 
     const router = useRouter()
     const [imageUrl, setImageUrl] = useState(false)
     const [showDialog, setShowDialog] = useState(false)
+    const baseUrl = getBaseUrl()
+    const [processing, setProcessing] = useState(false)
 
     useEffect(() => {
         return () => {
@@ -70,8 +73,9 @@ function AddCategory() {
         }
 
         const toastLoadingId = toast.loading('Creating Category', {autoClose: false})
+        setProcessing(true)
         try {
-            const response = await axios.post('/api/v1/admin/category', categoryData)
+            const response = await axios.post(`${baseUrl}/api/v1/admin/category`, categoryData)
 
             console.log(response, '**response')
             console.log(response.data, '**response.data')
@@ -82,10 +86,12 @@ function AddCategory() {
             }
 
             generateToast(toastLoadingId,response.data.message, 'success')
+            window.location.reload()
             handleCancel()
-            router.refresh()
         } catch (error) {
             generateToast(toastLoadingId,'An error occured', 'error')
+        }finally{
+            setProcessing(false)
         }
     }
 
@@ -177,6 +183,7 @@ function AddCategory() {
                     {/* Buttons */}
                      <div className='w-full flex gap-4  lg:flex-col '>
                         <button 
+                            disabled = {processing}
                             type='submit'
                             className='btn btn-success w-1/2 lg:w-full'>
                                 Add Category
