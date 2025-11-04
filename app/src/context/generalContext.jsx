@@ -26,11 +26,12 @@ const fetchCategory_general = async () => {
 
 const fetchCategory = async () => {
     try {
-        const res = await fetch(`${baseUrl}/v1/admin/category`, {cache: 'force-cache'})
+        const res = await fetch(`${baseUrl}/api/v1/admin/category`)
         if(!res.ok){
             throw new Error('Failed to create new product')
         }
         const result = await res.json()
+        console.log(result, '***result from fetch category api')
         return result.data
     } catch (error) {
         console.error(error)
