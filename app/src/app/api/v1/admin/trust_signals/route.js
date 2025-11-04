@@ -1,9 +1,21 @@
 import { NextResponse } from "next/server";
 import { createTrustSignal,getAllTrustSignals } from "@/lib/models/admin/trust_signals"; 
+import { verifyAdminToken } from "@/lib/utils/verifyAdminToken";
 
 
 export async function POST(req) { 
     try {
+        const decoded = await verifyAdminToken()
+        const { role } = decoded
+
+        if (role === "demo-admin") {
+            return NextResponse.json({
+                isDemo: true,
+                success: false,
+                message: "Functionality not allowed for demo admin account",
+            })
+        }
+
         const formData = await req.json();
         const result = await createTrustSignal(formData)
 

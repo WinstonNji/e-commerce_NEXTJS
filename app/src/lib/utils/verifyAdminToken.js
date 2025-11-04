@@ -1,30 +1,20 @@
-import { cookies } from "next/headers";
+import { cookies } from "next/headers"
 import jwt from 'jsonwebtoken'
 
-
-
-export async function verifyAdminToken(token){
-
-    console.log(token, 'obtained token')
-
+export async function verifyAdminToken(){
+    const cookieStore = await cookies()
+    const token = cookieStore.get('auth_token')?.value
+    
     if(!token){
-        throw new Error('No token insight')
+        throw new Error("No token found. Access denied")
     }
 
-    try {
-        const decoded = jwt.verify(token, process.env.SECRET_JWT_TOKEN)
-        const {role} = decoded
+    const decoded  = jwt.verify(token, process.env.SECRET_JWT_TOKEN)
+    const {role} = decoded
 
-        console.log(decoded, 'decoded')
-
-        if(role !== 'admin'){
-            return false
-        }
-
-        return true
-
-    } catch (error) {
-        console.log(error)
-        return false
+    if(role !== 'admin' && role !== 'demo-admin'){
+        throw new Error("Access Denied.")
     }
+
+    return decoded
 }

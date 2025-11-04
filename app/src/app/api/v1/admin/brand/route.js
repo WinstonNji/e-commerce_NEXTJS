@@ -1,5 +1,6 @@
 import pool from "@/lib/db";
 import { NextResponse } from "next/server";
+import { verifyAdminToken } from "@/lib/utils/verifyAdminToken";
 
 // export async function GET() {
 //     console.log('works')
@@ -39,6 +40,17 @@ export async function POST(req) {
     console.log(data, '-----body')
 
     try {
+        const decoded = await verifyAdminToken()
+        const { role } = decoded
+
+        if (role === "demo-admin") {
+            return NextResponse.json({
+                isDemo: true,
+                success: false,
+                message: "Functionality not allowed for demo admin account",
+            })
+        }
+
         // Fetch all brands
         const brands = await pool.query(`
             Select * from brand

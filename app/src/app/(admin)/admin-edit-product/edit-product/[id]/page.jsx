@@ -245,6 +245,12 @@ function Page() {
       setProcessing(true)
       try {
         const result = await axios.patch(`${baseUrl}/api/v1/admin/products/${id}`, productData)
+
+        if(result.data.isDemo){
+          generateToast(loadingToastId, result.data.message, 'info')
+          return 
+        }
+
         if(!result.data.success){
           generateToast(loadingToastId, result.data.message, 'error')
           return 

@@ -1,10 +1,22 @@
 import {NextResponse} from "next/server";
 import { deleteCategory, updateCategory } from "@/lib/models/admin/categories";
 import pool from "@/lib/db";
+import { verifyAdminToken } from "@/lib/utils/verifyAdminToken";
 
 
 export async function DELETE(req, {params}){
     try {
+        const decoded = await verifyAdminToken()
+        const { role } = decoded
+
+        if (role === "demo-admin") {
+            return NextResponse.json({
+                isDemo: true,
+                success: false,
+                message: "Functionality not allowed for demo admin account",
+            })
+        }
+
         const {id} = await params;
 
         // Checking if a product already uses this category
@@ -49,6 +61,17 @@ export async function DELETE(req, {params}){
 
 export async function PATCH(req, {params}){
     try {
+        const decoded = await verifyAdminToken()
+        const { role } = decoded
+
+        if (role === "demo-admin") {
+            return NextResponse.json({
+                isDemo: true,
+                success: false,
+                message: "Functionality not allowed for demo admin account",
+            })
+        }
+
         const {id} = await params
         const formData = await req.formData()
         const result = await updateCategory(id, formData )

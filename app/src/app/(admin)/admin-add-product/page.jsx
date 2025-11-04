@@ -185,13 +185,27 @@ function page() {
             
             const result = await response.json()
 
-            if(!result){
+            console.log(result, '****')
+
+            if(result.success.isDemo){
+                toast.update(loading, {
+                    render : result.message,
+                    type : "info",
+                    isLoading : false
+                })
+                return
+            }
+
+            if(!result.success){
                 toast.update(loading, {
                     render : result.message,
                     type : "error",
                     isLoading : false
                 })
+                return
             }
+
+            
 
             toast.update(loading, {
                 render: result.message,

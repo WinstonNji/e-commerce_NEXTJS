@@ -1,10 +1,22 @@
 import pool from "@/lib/db";
 const { NextResponse } = require("next/server");
+import { verifyAdminToken } from "@/lib/utils/verifyAdminToken";
 
 
 export async function DELETE(req, {params}) {
 
     try {
+        const decoded = await verifyAdminToken()
+        const { role } = decoded
+
+        if (role === "demo-admin") {
+            return NextResponse.json({
+                isDemo: true,
+                success: false,
+                message: "Functionality not allowed for demo admin account",
+            })
+        }
+
         const {id} = await params
 
         // Check if product is tied to brand
@@ -56,6 +68,17 @@ export async function DELETE(req, {params}) {
 
 export async function PATCH(req, {params}) {
     try {
+        const decoded = await verifyAdminToken()
+        const { role } = decoded
+
+        if (role === "demo-admin") {
+            return NextResponse.json({
+                isDemo: true,
+                success: false,
+                message: "Functionality not allowed for demo admin account",
+            })
+        }
+
         const {id} = await params
         const data = await req.json()
         

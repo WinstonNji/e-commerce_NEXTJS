@@ -1,8 +1,20 @@
 import { createCarousel, getAllCarousel } from "@/lib/models/admin/carousel";
 import { NextResponse } from "next/server";
+import { verifyAdminToken } from "@/lib/utils/verifyAdminToken";
 
 export async function POST(req){
     try {
+        const decoded = await verifyAdminToken()
+        const { role } = decoded
+
+        if (role === "demo-admin") {
+            return NextResponse.json({
+                isDemo: true,
+                success: false,
+                message: "Functionality not allowed for demo admin account",
+            })
+        }
+
         const data = await req.formData()
 
         const result = await createCarousel(data)

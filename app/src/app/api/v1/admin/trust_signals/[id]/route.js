@@ -1,9 +1,21 @@
 import { NextResponse } from "next/server";
 import { deleteTrustSignal, editTrustSignal } from "@/lib/models/admin/trust_signals";
+import { verifyAdminToken } from "@/lib/utils/verifyAdminToken";
 
 
 export async function PATCH(req, {params}){
     try {
+        const decoded = await verifyAdminToken()
+        const { role } = decoded
+
+        if (role === "demo-admin") {
+            return NextResponse.json({
+                isDemo: true,
+                success: false,
+                message: "Functionality not allowed for demo admin account",
+            })
+        }
+
         const {id} = await params
         const formData = await req.formData()
         const result = await editTrustSignal(formData, id )
@@ -29,6 +41,17 @@ export async function PATCH(req, {params}){
 
 export async function DELETE(req, {params}){
     try {
+        const decoded = await verifyAdminToken()
+        const { role } = decoded
+
+        if (role === "demo-admin") {
+            return NextResponse.json({
+                isDemo: true,
+                success: false,
+                message: "Functionality not allowed for demo admin account",
+            })
+        }
+
         const {id} = await params;
         const result = await deleteTrustSignal(id)
 

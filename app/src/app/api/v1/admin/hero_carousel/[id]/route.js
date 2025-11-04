@@ -1,9 +1,17 @@
 import { updateCarousel,deleteCarousel } from "@/lib/models/admin/carousel";
 import { NextResponse } from "next/server";
+import { verifyAdminToken } from "@/lib/utils/verifyAdminToken";
 
 
 export async function PATCH(req, {params}){
     try {
+        const decoded = await verifyAdminToken()
+        const { role } = decoded
+
+        if (role === "demo-admin") {
+            return NextResponse.json({ message: "Functionality not allowed for demo admin account", success: false, isDemo: true }, { status: 200 })
+        }
+
         const {id} = await params
         const data = await req.formData()
 
@@ -29,6 +37,13 @@ export async function PATCH(req, {params}){
 
 export async function DELETE(req, {params}){
     try {
+        const decoded = await verifyAdminToken()
+        const { role } = decoded
+
+        if (role === "demo-admin") {
+            return NextResponse.json({ message: "Functionality not allowed for demo admin account", success: false, isDemo: true }, { status: 200 })
+        }
+
         const {id} = await params
         const result = await deleteCarousel(id)
         if(!result){

@@ -2,19 +2,15 @@ import { NextResponse } from "next/server";
 import pool from "@/lib/db";
 import { cookies } from "next/headers";
 import jwt from 'jsonwebtoken'
+import { verifyAdminToken } from "@/lib/utils/verifyAdminToken";
 
 export async function GET() {
     try {
-        const cookieStore = await cookies()
-        const token = cookieStore.get('auth_token')?.value
-        console.log(token, '***token')
-        if(!token){
-            throw new Error("No token found. Access denied")
-        }
-        const decoded  = jwt.verify(token, process.env.SECRET_JWT_TOKEN)
-        const {role} = decoded
-        if(role !== 'admin'){
-            throw new Error("Access Denied.")
+        const decoded = await verifyAdminToken()
+        const {role} = decoded;
+
+        if(role === 'demo-admin'){
+            console.log("Demo admin accessing dashboard")
         }
 
         const response = await pool.query(`
@@ -59,7 +55,7 @@ export async function GET() {
         })
 
     } catch (error) {
-        console.error(error)
+        console.error(error, '****ERR MESSAGE')
         return NextResponse.json({
             success: false,
             message: error,

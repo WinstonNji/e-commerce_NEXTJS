@@ -2,9 +2,21 @@ import pool from "@/lib/db";
 import { NextResponse } from "next/server";
 import { createProduct } from "@/lib/models/admin/productController";
 import { getAllProducts } from "@/lib/models/admin/productController";
+import { verifyAdminToken } from "@/lib/utils/verifyAdminToken";
 
 export async function POST(req){
     try {
+        const decoded = await verifyAdminToken()
+        const {role} = decoded;
+
+        if(role === 'demo-admin'){
+            return NextResponse.json({
+                isDemo: true,
+                success: false,
+                message: "Functionaliity not allowed for demo_admin account",
+            })
+        }
+
         const formData = await req.formData();
         const result = await createProduct(formData)
 

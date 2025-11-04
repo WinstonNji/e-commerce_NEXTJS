@@ -23,8 +23,8 @@ export default async function RootLayout({ children }) {
   try {
     const decoded = jwt.verify(token, process.env.SECRET_JWT_TOKEN)
     const {role} = decoded
-
-    if(role !== 'admin'){
+    console.log(role, '***role')
+    if(role !== 'admin' && role !== 'demo-admin'){
       redirect('/login')
     }
   } catch (error) {
