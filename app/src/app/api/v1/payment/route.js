@@ -104,7 +104,7 @@ export async function POST (req){
         params.append('userId', userId)
         params.append('orderId', orderId)
 
-        const redirectionUrl = `https://e-commerce-nextjs-sage.vercel.app/?${params.toString()}`;
+        const redirectionUrl = `https://e-commerce-nextjs-sage.vercel.app/verifyPayment?${params.toString()}`;
 
         // Initiating Payment getway
         const response = await axios.post("https://api.flutterwave.com/v3/payments", {
