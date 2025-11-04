@@ -116,7 +116,12 @@ function AddHeroPage() {
                 const fileInput = document.getElementById('productImg')
                 if (fileInput) fileInput.value = ''
             } else {
-                toast.error(response.data.message || 'Failed to publish carousel item')
+                const msg = response.data.message || 'Failed to publish carousel item'
+                if (msg === 'Functionality not allowed for demo admin account' || response.data?.isDemo) {
+                    toast.info(msg)
+                } else {
+                    toast.error(msg)
+                }
             }
         } catch (error) {
             console.error('Error publishing carousel:', error)

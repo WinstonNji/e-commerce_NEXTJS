@@ -187,7 +187,7 @@ function page() {
 
             console.log(result, '****')
 
-            if(result.success.isDemo){
+            if(result?.isDemo || result?.message === 'Functionality not allowed for demo admin account'){
                 toast.update(loading, {
                     render : result.message,
                     type : "info",
