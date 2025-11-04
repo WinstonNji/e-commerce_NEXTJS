@@ -7,6 +7,7 @@ import ProductDetails from '@/components/(public)/SingleProductPage/ProductDetai
 import SimilarProducts from '@/components/(public)/SingleProductPage/SimilarProducts'
 import ProductCard from '@/components/(public)/Shared/ProductCard'
 import { getBaseUrl } from '@/lib/utils/getBaseUrl';
+import { notFound } from 'next/navigation';
 
 
 
@@ -45,7 +46,7 @@ const fetchSingleProduct = async (productId) => {
       throw Error("Couldn't fetch product")
     }
     const result = await res.json()
-    console.log(result.data, '****single Product')
+
     return result.data
   } catch (error) {
     console.error(error)
@@ -67,6 +68,10 @@ async function SingleProduct({params}) {
     }
 
     const [product, allProducts] = await Promise.all([fetchSingleProduct(id), fetchAllProducts()])
+
+    if(!product){
+      notFound()
+    }
 
     const similarProducts = allProducts.filter((p,idx) => p.category ===  product.category  && p.id !== id)
 
