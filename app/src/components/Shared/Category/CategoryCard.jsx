@@ -144,10 +144,10 @@ function CategoryCard({info}) {
                     <Pencil/>
                 </div >
                 
-                <div className='relative aspect-[4/3] bg-base-200 overflow-hidden'>
+                <div 
+                    className='relative aspect-square sm:aspect-[4/3] bg-base-200 overflow-hidden'>
                     {isEdit && (
                         <label 
-
                             htmlFor={`imgUpload-${category.id}`} 
                             className='group'
                             onClick={(e) => e.stopPropagation()}
@@ -166,9 +166,7 @@ function CategoryCard({info}) {
                                 onChange={handleFileUpload}
                             />
                         </label>
-                        
                     )}
-                
 
                     <Image 
                         fill={true}
