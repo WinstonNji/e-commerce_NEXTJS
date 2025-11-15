@@ -1,3 +1,6 @@
+Here’s your README updated to include the **demo admin login credentials** in a clear section under **Usage**:
+
+````markdown
 ### E‑Commerce NEXT.js
 
 A full‑stack, production‑ready e‑commerce application built with Next.js (App Router), React, Tailwind CSS, PostgreSQL, JWT auth, Cloudinary asset management, and Flutterwave payments. Includes an admin dashboard for product/catalog management and a public storefront with cart, checkout, and order verification.
@@ -85,45 +88,51 @@ e-commerce_NEXTJS/
 │     └─ middleware.ts
 ├─ LICENSE
 └─ README.md
-```
+````
 
 ## Short Description
 
-- A modern e‑commerce platform with a clean UX, SEO‑friendly pages, server‑side APIs, and an admin suite.
-- Uses PostgreSQL for data persistence, JWT for authentication via cookies, Cloudinary for media, and Flutterwave for payments and post‑payment verification.
+* A modern e‑commerce platform with a clean UX, SEO‑friendly pages, server‑side APIs, and an admin suite.
+* Uses PostgreSQL for data persistence, JWT for authentication via cookies, Cloudinary for media, and Flutterwave for payments and post‑payment verification.
 
 ## Key Features
 
-- **Public Storefront**
-  - Product listing, sorting, and detail pages
-  - Cart and quantity management
-  - Secure checkout with Flutterwave
-  - Transaction verification and order finalization
-- **Admin Dashboard**
-  - Create, edit, and manage products
-  - Manage categories, brands, hero carousel, and trust signals
-  - Analytics and orders overview
-- **Authentication & Authorization**
-  - JWT‑based auth stored in HTTP‑only cookies
-  - Admin‑only routes protected by token verification
-- **Media & Assets**
-  - Cloudinary integration for optimized media handling
-- **Tech Stack**
-  - Next.js 15 (App Router), React 19
-  - Tailwind CSS 4 with DaisyUI
-  - PostgreSQL (`pg`) with support for Neon serverless
-  - Axios, React‑Toastify, Lucide icons
+* **Public Storefront**
+
+  * Product listing, sorting, and detail pages
+  * Cart and quantity management
+  * Secure checkout with Flutterwave
+  * Transaction verification and order finalization
+* **Admin Dashboard**
+
+  * Create, edit, and manage products
+  * Manage categories, brands, hero carousel, and trust signals
+  * Analytics and orders overview
+* **Authentication & Authorization**
+
+  * JWT‑based auth stored in HTTP‑only cookies
+  * Admin‑only routes protected by token verification
+* **Media & Assets**
+
+  * Cloudinary integration for optimized media handling
+* **Tech Stack**
+
+  * Next.js 15 (App Router), React 19
+  * Tailwind CSS 4 with DaisyUI
+  * PostgreSQL (`pg`) with support for Neon serverless
+  * Axios, React‑Toastify, Lucide icons
 
 ## Installation
 
-1) **Prerequisites**
-- Node.js 18+ (recommended 20+)
-- npm 9+ (or pnpm/yarn)
-- PostgreSQL database (local or managed like Neon)
-- Cloudinary account
-- Flutterwave account
+1. **Prerequisites**
 
-2) **Clone and install**
+* Node.js 18+ (recommended 20+)
+* npm 9+ (or pnpm/yarn)
+* PostgreSQL database (local or managed like Neon)
+* Cloudinary account
+* Flutterwave account
+
+2. **Clone and install**
 
 ```bash
 git clone <your-repo-url> e-commerce_NEXTJS
@@ -131,7 +140,7 @@ cd e-commerce_NEXTJS/app
 npm install
 ```
 
-3) **Environment variables**
+3. **Environment variables**
 
 Create an `.env.local` file in `app/` with:
 
@@ -157,15 +166,15 @@ FLW_SECRET_KEY=your_secret_key
 
 Ensure your database has the required tables (`users`, `products`, `product_images`, `category`, `brand`, `hero_carousel`, `trust_signal`, `carts`, `orders`, `order_items`). Provisioning/migrations are not bundled; create schema manually or via your preferred migration tool.
 
-4) **Development**
+4. **Development**
 
 ```bash
 npm run dev
 ```
 
-- App runs at `http://localhost:3000`.
+* App runs at `http://localhost:3000`.
 
-5) **Production build**
+5. **Production build**
 
 ```bash
 npm run build
@@ -177,12 +186,28 @@ npm run start
 - **Local development**
   - Visit the storefront at `http://localhost:3000`
   - Admin dashboard is under the `(admin)` routes; ensure your test user has `role=admin` or `role=demo-admin` in the JWT payload for access
+
+- **Demo Admin Login**
+  - **Email:** `demo_admin@gmail.com`
+  - **Password:** `demoAdmin@123`
+  - You can use these credentials to log in directly to the admin dashboard for testing
+
+- **Demo Card / Payment Testing**
+  Use these credentials when testing Flutterwave payments in development:
+
+  | Card Type | Card Number | CVV | Expiry | PIN |
+  |-----------|------------|-----|--------|-----|
+  | MasterCard (PIN Authentication) | 5531 8866 5214 2950 | 564 | 09/32 | 3310 |
+
 - **Authentication**
   - Auth token is stored as `auth_token` in HTTP‑only cookies
+
 - **Payments**
   - Checkout triggers Flutterwave payment initialization and redirects to `verifyPayment` for verification on return
+
 - **Media**
   - Cloudinary configuration is loaded on server startup; uploads use your configured Cloudinary credentials
+
 
 Common commands:
 
@@ -202,12 +227,12 @@ npm run start
 
 ## Contribution Guidelines
 
-- Open an issue describing proposed changes before submitting a PR
-- Fork the repo and create feature branches from `main`
-- Keep edits focused and well‑scoped; add tests where applicable
-- Follow existing code style and formatting
-- Ensure `npm run build` and `npm run lint` pass locally
-- Provide clear PR descriptions and screenshots for UI changes
+* Open an issue describing proposed changes before submitting a PR
+* Fork the repo and create feature branches from `main`
+* Keep edits focused and well‑scoped; add tests where applicable
+* Follow existing code style and formatting
+* Ensure `npm run build` and `npm run lint` pass locally
+* Provide clear PR descriptions and screenshots for UI changes
 
 ## License
 
@@ -215,7 +240,4 @@ This project is licensed under the terms of the LICENSE file included in the rep
 
 ## Authors or Credits
 
-- Author: Winston  
-
-
-
+* Author: Winston
